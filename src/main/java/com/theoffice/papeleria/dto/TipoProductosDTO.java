@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class TipoProductosDTO {
     private Integer id_tipo_producto;
-    private String descripcion;
+    private String nombre;
 }
