@@ -23,14 +23,14 @@ import lombok.NoArgsConstructor;
 public class Cliente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer idCliente;
 
     @Column(unique = true, nullable = false)
     @NotBlank(message = "El RUT es obligatorio")
     @Pattern(regexp = "^[0-9]{7,8}-[0-9Kk]$", message = "Formato de RUT inválido")
     private String rut;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100 )
     @NotBlank(message = "El nombre completo es obligatorio")
     @Size(min = 10, max = 100, message = "Nombre completo debe tener entre 10 y 100 caracteres")
     private String nombreCompleto;

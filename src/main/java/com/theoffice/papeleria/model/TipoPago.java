@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 public class TipoPago {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer idTipoPago;
 
     @Column(nullable = false)
     @Size(min = 3, max = 50, message = "El nombre del tipo de pago debe tener entre 3 y 50 caracteres")
