@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 public class Tarjeta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer idTarjeta;
 
     @Column(nullable = false)
     private boolean esDebito; // true para débito, false para crédito
@@ -28,7 +28,7 @@ public class Tarjeta {
     @Column(nullable = false)
     @NotBlank(message = "El número de tarjeta es obligatorio")
     @Size(min = 16, max = 16, message = "El número de tarjeta debe tener 16 dígitos")
-    private int numeroTarjeta;
+    private Integer numeroTarjeta;
 
     @Column(nullable = false)
     @NotBlank(message = "El nombre del titular es obligatorio")
