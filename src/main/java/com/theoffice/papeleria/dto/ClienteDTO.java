@@ -4,7 +4,8 @@ import lombok.Data;
 
 @Data
 public class ClienteDTO {
-    private int idCliente;
+    private Integer idCliente;
     private String rut;
     private String nombreCompleto;
+    private boolean activo;
 }

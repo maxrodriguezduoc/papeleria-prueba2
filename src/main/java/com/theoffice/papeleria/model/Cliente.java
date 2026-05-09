@@ -1,7 +1,5 @@
 package com.theoffice.papeleria.model;
 
-import java.time.LocalDateTime;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -35,5 +33,6 @@ public class Cliente {
     @Size(min = 10, max = 100, message = "Nombre completo debe tener entre 10 y 100 caracteres")
     private String nombreCompleto;
 
-    private LocalDateTime creadoEn;
+    @Column(nullable = false)
+    private boolean activo = true;
 }

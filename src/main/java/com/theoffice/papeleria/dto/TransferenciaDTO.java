@@ -4,10 +4,10 @@ import lombok.Data;
 
 @Data
 public class TransferenciaDTO {
-    private int idTransferencia;
+    private Integer idTransferencia;
     private String bancoOrigen;
-    private int numeroCuentaOrigen;
+    private Integer numeroCuentaOrigen;
     private String bancoDestino;
-    private int numeroCuentaDestino;
+    private Integer numeroCuentaDestino;
     private double monto;
 }
