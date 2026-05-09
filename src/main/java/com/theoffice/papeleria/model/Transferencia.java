@@ -20,7 +20,15 @@ import lombok.NoArgsConstructor;
 public class Transferencia {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+<<<<<<< HEAD
     private Integer idTransferencia;
+=======
+<<<<<<< HEAD
+    private Integer idTransferencia;
+=======
+    private int idTransferencia;
+>>>>>>> 4ccf83db74090978a7de6d23206230c0ec87abd9
+>>>>>>> 2bdc99fb229ac588d0845715ea5d7bfd8c49d5f1
 
     @Column(nullable = false)
     @NotBlank(message = "El banco de origen es obligatorio")
@@ -40,7 +48,15 @@ public class Transferencia {
     @Column(nullable = false)
     @NotBlank(message = "El número de cuenta de destino es obligatorio")
     @Size(min = 10, max = 20, message = "El número de cuenta de destino debe tener entre 10 y 20 caracteres")
+<<<<<<< HEAD
     private Integer numeroCuentaDestino;
+=======
+<<<<<<< HEAD
+    private Integer numeroCuentaDestino;
+=======
+    private int numeroCuentaDestino;
+>>>>>>> 4ccf83db74090978a7de6d23206230c0ec87abd9
+>>>>>>> 2bdc99fb229ac588d0845715ea5d7bfd8c49d5f1
 
     @Column(nullable = false)
     @NotBlank(message = "El monto es obligatorio")
