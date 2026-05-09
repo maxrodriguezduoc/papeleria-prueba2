@@ -26,4 +26,7 @@ public class Categoria {
     @Size(min = 3, max = 50, message = "El nombre de la categoría debe tener entre 3 y 50 caracteres")
     @NotBlank(message = "El nombre de la categoría es obligatorio")
     private String nombre;
+
+    @Column(nullable = false)
+    private boolean activo;
 }

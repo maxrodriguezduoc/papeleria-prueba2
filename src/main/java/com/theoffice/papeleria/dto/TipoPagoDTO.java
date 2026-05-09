@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class TipoPagoDTO {
-    private int idTipoPago;
+    private Integer idTipoPago;
     private String formaPago;
+    private boolean activo;
 }
