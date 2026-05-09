@@ -11,12 +11,6 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-<<<<<<< HEAD
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
-=======
->>>>>>> 4ccf83db74090978a7de6d23206230c0ec87abd9
 @Entity
 @Table(name = "tipo_productos")
 @Data
@@ -32,11 +26,6 @@ public class TiposProductos {
     @Column(nullable = false, length = 100)
     private String nombre;
 
-<<<<<<< HEAD
-    
-
-=======
->>>>>>> 4ccf83db74090978a7de6d23206230c0ec87abd9
 
 
 
