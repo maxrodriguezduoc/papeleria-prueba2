@@ -7,63 +7,86 @@ import com.theoffice.papeleria.dto.RegionDTO;
 import com.theoffice.papeleria.model.Region;
 import com.theoffice.papeleria.repository.RegionRepository;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Transactional
+@Slf4j
 public class RegionService {
 
     @Autowired
     private RegionRepository regionRepository;
 
-    // Obtener una lista de las regiones
-    public List<RegionDTO> obtenerTodos(){
-        return regionRepository.findAll().stream()
-                    .map(this::convertirADTO)
-                    .toList();
+    public List<RegionDTO> obtenerTodos() {
+        log.info("Obteniendo lista de regiones");
+
+        return regionRepository.findAll()
+                .stream()
+                .map(this::convertirADTO)
+                .toList();
     }
 
-    // Metodo para buscar Regiones por ID
-    public RegionDTO buscarPorId(Integer id){
+    public RegionDTO buscarPorId(Integer id) {
+        log.info("Buscando región con ID: {}", id);
+
         Region region = regionRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("REGION NO ENCONTRADA!"));
+                .orElseThrow(() -> {
+                    log.error("Región con ID {} no encontrada", id);
+                    return new RuntimeException("Región no encontrada");
+                });
+
         return convertirADTO(region);
     }
 
-    // Metodo para eliminar Regiones
-    public String eliminarRegion(Integer id){
-        try {
-            Region region = regionRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("NO SE PUEDE ELIMINAR! REGION NO ENCONTRADA!"));
+    public void eliminarRegion(Integer id) {
+        log.info("Intentando eliminar región con ID: {}", id);
 
-            regionRepository.delete(region);
-            return "REGION " + region.getNombreRegion() + " ELIMINADA!";
-        } catch (Exception e) {
-            return e.getMessage();
-        }
+        Region region = regionRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.error("Región con ID {} no encontrada", id);
+                    return new RuntimeException("Región no encontrada");
+                });
+
+        regionRepository.delete(region);
+
+        log.info("Región eliminada exitosamente!");
     }
 
-    // Metodo para publicar un Regiones
-    public Region guardarRegion(Region region){
-        return regionRepository.save(region);
+    public RegionDTO guardarRegion(RegionDTO dto) {
+        log.info("Creando región: {}", dto.getNombreRegion());
+
+        Region region = new Region();
+        region.setNombreRegion(dto.getNombreRegion());
+
+        Region guardada = regionRepository.save(region);
+
+        log.info("Región creada exitosamente");
+
+        return convertirADTO(guardada);
     }
 
-    // Metodo para editar Regiones
-    public Region actualizarRegion(Integer id, Region region){
-        Region regionExistente = regionRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("REGION NO ENCONTRADA!"));
+    public RegionDTO actualizarRegion(Integer id, RegionDTO dto) {
+        log.info("Actualizando región con ID: {}", id);
 
-        if (region.getNombreRegion() != null){
-            regionExistente.setNombreRegion(region.getNombreRegion());
-        }
-        return regionRepository.save(regionExistente);
+        Region existente = regionRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.error("Región con ID {} no encontrada", id);
+                    return new RuntimeException("Región no encontrada");
+                });
+
+        existente.setNombreRegion(dto.getNombreRegion());
+
+        Region actualizada = regionRepository.save(existente);
+
+        log.info("Región actualizada exitosamente!");
+
+        return convertirADTO(actualizada);
     }
 
-    // Metodo para convertir Entidades en DTO
-    private RegionDTO convertirADTO(Region region){
+    private RegionDTO convertirADTO(Region region) {
         RegionDTO dto = new RegionDTO();
         dto.setIdRegion(region.getIdRegion());
         dto.setNombreRegion(region.getNombreRegion());
         return dto;
     }
-
 }

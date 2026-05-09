@@ -1,20 +1,20 @@
 package com.theoffice.papeleria.model;
 
+import java.util.List;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -25,9 +25,11 @@ public class Region {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idRegion;
 
-    @NotBlank (message = "NOMBRE DE REGION ES OBLIGATORIO!")
-    @Size(min = 15, max = 100, message = "NOMBRE DE REGION DEBE TENER ENTRE 15 A 100 CARACTERES!")
-    @Column(nullable = false, length = 100)
+    @NotBlank(message = "El nombre de la región es obligatorio!")
+    @Size(min = 15, max = 50, message = "Nombre de la región debe tener entre 15 a 50 caracteres!")
+    @Column(nullable = false, length = 50, unique = true)
     private String nombreRegion;
 
+    @OneToMany(mappedBy = "region")
+    private List<Comuna> comunas;
 }

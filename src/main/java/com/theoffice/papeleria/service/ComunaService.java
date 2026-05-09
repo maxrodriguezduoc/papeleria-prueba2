@@ -5,69 +5,113 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.theoffice.papeleria.dto.ComunaDTO;
 import com.theoffice.papeleria.model.Comuna;
+import com.theoffice.papeleria.model.Region;
 import com.theoffice.papeleria.repository.ComunaRepository;
+import com.theoffice.papeleria.repository.RegionRepository;
 
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Transactional
+@Slf4j
 public class ComunaService {
 
     @Autowired
     private ComunaRepository comunaRepository;
+    private RegionRepository regionRepository;
 
-    // Obtener una lista de los comunas
-    public List<ComunaDTO> obtenerTodos(){
-        return comunaRepository.findAll().stream()
-                    .map(this::convertirADTO)
-                    .toList();
+    public List<ComunaDTO> obtenerTodos() {
+        log.info("Obteniendo lista de comunas");
+
+        return comunaRepository.findAll()
+                .stream()
+                .map(this::convertirADTO)
+                .toList();
     }
 
-    // Metodo para buscar Comuna por ID
-    public ComunaDTO buscarPorId(Integer id){
+    public ComunaDTO buscarPorId(Integer id) {
+        log.info("Buscando comuna con ID: {}", id);
+
         Comuna comuna = comunaRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("COMUNA NO ENCONTRADA!"));
+                .orElseThrow(() -> {
+                    log.error("Comuna con ID {} no encontrada", id);
+                    return new RuntimeException("Comuna no encontrada");
+                });
+
         return convertirADTO(comuna);
     }
 
-    // Metodo para eliminar Comuna
-    public String eliminarComuna(Integer id){
-        try {
-            Comuna comuna = comunaRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("NO SE PUEDE ELIMINAR! COMUNA NO ENCONTRADA!"));
+    public void eliminarComuna(Integer id) {
+        log.info("Intentando eliminar comuna con ID: {}", id);
 
-            comunaRepository.delete(comuna);
-            return "COMUNA " + comuna.getNombreComuna() + " ELIMINADA!";
-        } catch (Exception e) {
-            return e.getMessage();
-        }
+        Comuna comuna = comunaRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.error("Comuna con ID {} no encontrada", id);
+                    return new RuntimeException("Comuna no encontrada");
+                });
+
+        comunaRepository.delete(comuna);
+
+        log.info("Comuna con ID {} eliminada correctamente", id);
     }
 
-    // Metodo para publicar una Comuna
-    public Comuna guardarComuna(Comuna comuna){
-        return comunaRepository.save(comuna);
+    public ComunaDTO guardarComuna(ComunaDTO dto) {
+        log.info("Creando comuna: {}", dto.getNombreComuna());
+
+        Region region = regionRepository.findById(dto.getRegionId())
+                .orElseThrow(() -> {
+                    log.error("Region con ID {} no encontrada", dto.getRegionId());
+                    return new RuntimeException("Region no encontrada");
+                });
+
+        Comuna comuna = new Comuna();
+        comuna.setNombreComuna(dto.getNombreComuna());
+        comuna.setCodigoPostal(dto.getCodigoPostal());
+        comuna.setRegion(region);
+
+        Comuna guardada = comunaRepository.save(comuna);
+
+        log.info("Comuna creada con ID: {}", guardada.getIdComuna());
+
+        return convertirADTO(guardada);
     }
 
-    // Metodo para actualizar comunas
-    public Comuna actualizarComuna(Integer id, Comuna comuna){
-        Comuna comunaExistente = comunaRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("COMUNA NO ENCONTRADA!"));
+    public ComunaDTO actualizarComuna(Integer id, ComunaDTO dto) {
+        log.info("Actualizando comuna con ID: {}", id);
 
-        if (comuna.getNombreComuna() != null){
-            comunaExistente.setNombreComuna(comuna.getNombreComuna());
+        Comuna existente = comunaRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.error("Comuna con ID {} no encontrada", id);
+                    return new RuntimeException("Comuna no encontrada");
+                });
+
+        existente.setNombreComuna(dto.getNombreComuna());
+        existente.setCodigoPostal(dto.getCodigoPostal());
+
+        if (dto.getRegionId() != null) {
+            Region region = regionRepository.findById(dto.getRegionId())
+                    .orElseThrow(() -> new RuntimeException("Region no encontrada"));
+            existente.setRegion(region);
         }
-        if (comuna.getCodigoPostal() != null){
-            comunaExistente.setCodigoPostal(comuna.getCodigoPostal());
-        }
-        return comunaRepository.save(comunaExistente);
+
+        Comuna actualizada = comunaRepository.save(existente);
+
+        log.info("Comuna con ID {} actualizada correctamente", id);
+
+        return convertirADTO(actualizada);
     }
 
-    // Metodo para convertir Entidades en DTO
-    private ComunaDTO convertirADTO(Comuna comuna){
+    private ComunaDTO convertirADTO(Comuna comuna) {
         ComunaDTO dto = new ComunaDTO();
         dto.setIdComuna(comuna.getIdComuna());
         dto.setNombreComuna(comuna.getNombreComuna());
         dto.setCodigoPostal(comuna.getCodigoPostal());
+
+        if (comuna.getRegion() != null) {
+            dto.setRegionId(comuna.getRegion().getIdRegion());
+        }
+
         return dto;
     }
 }

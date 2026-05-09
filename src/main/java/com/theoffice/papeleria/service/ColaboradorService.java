@@ -5,58 +5,116 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.theoffice.papeleria.dto.ColaboradorDTO;
+import com.theoffice.papeleria.model.Cargo;
 import com.theoffice.papeleria.model.Colaborador;
+import com.theoffice.papeleria.model.Local;
+import com.theoffice.papeleria.repository.CargoRepository;
 import com.theoffice.papeleria.repository.ColaboradorRepository;
+import com.theoffice.papeleria.repository.LocalRepository;
+
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Transactional
+@Slf4j
 public class ColaboradorService {
 
     @Autowired
     private ColaboradorRepository colaboradorRepository;
+    private CargoRepository cargoRepository;
+    private LocalRepository localRepository;
 
-    // Obtener una lista de los colaboradores
-    public List<ColaboradorDTO> obtenerTodos(){
-        return colaboradorRepository.findAll().stream()
-                    .map(this::convertirADTO)
-                    .toList();
+    public List<ColaboradorDTO> obtenerTodos() {
+        log.info("Obteniendo lista de colaboradores!");
+
+        return colaboradorRepository.findAll()
+                .stream()
+                .map(this::convertirADTO)
+                .toList();
     }
 
-    // Metodo para buscar por Colaboradores por ID
-    public ColaboradorDTO buscarPorId(Integer id){
+    public ColaboradorDTO buscarPorId(Integer id) {
+        log.info("Buscando colaborador con ID: {}", id);
+
         Colaborador colaborador = colaboradorRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("COLABORADOR NO ENCONTRADO!"));
+                .orElseThrow(() -> {
+                    log.error("Colaborador con ID {} no encontrado", id);
+                    return new RuntimeException("Colaborador no encontrado");
+                });
+
         return convertirADTO(colaborador);
     }
 
-    // Metodo para eliminar Colaboradores
-    public String eliminarColaborador(Integer id){
-        try {
-            Colaborador colaborador = colaboradorRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("NO SE PUEDE ELIMINAR! COLABORADOR NO ENCONTRADO!"));
+    public void eliminarColaborador(Integer id) {
+        log.info("Intentando eliminar colaborador con ID: {}", id);
 
-            colaboradorRepository.delete(colaborador);
-            return "COLABORADOR " + colaborador.getNombreColaborador() + " ELIMINADO!";
-        } catch (Exception e) {
-            return e.getMessage();
-        }
+        Colaborador colaborador = colaboradorRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.error("Colaborador con ID {} no encontrado", id);
+                    return new RuntimeException("Colaborador no encontrado");
+                });
+
+        colaboradorRepository.delete(colaborador);
+
+        log.info("Colaborador eliminado exitosamente!");
     }
 
-    // Metodo para publicar un Colaborador
-    public Colaborador guardarColaborador(Colaborador colaborador){
-        return  colaboradorRepository.save(colaborador);
+    public ColaboradorDTO guardarColaborador(ColaboradorDTO dto) {
+        log.info("Creando colaborador: {}", dto.getNombreColaborador());
+
+        Cargo cargo = cargoRepository.findById(dto.getCargoId())
+                .orElseThrow(() -> {
+                    log.error("Cargo con ID {} no encontrado", dto.getCargoId());
+                    return new RuntimeException("Cargo no encontrado");
+                });
+
+        Local local = localRepository.findById(dto.getLocalId())
+                .orElseThrow(() -> {
+                    log.error("Local con ID {} no encontrado", dto.getLocalId());
+                    return new RuntimeException("Local no encontrado");
+                });
+
+        Colaborador colaborador = new Colaborador();
+        colaborador.setNombreColaborador(dto.getNombreColaborador());
+        colaborador.setCargo(cargo);
+        colaborador.setLocal(local);
+
+        Colaborador guardado = colaboradorRepository.save(colaborador);
+
+        log.info("Colaborador guardado con ID: {}", guardado.getIdColaborador());
+
+        return convertirADTO(guardado);
     }
 
-    // Metodo para actualizar Colaboradores
-    public Colaborador actualizarColaborador(Integer id, Colaborador colaborador){
-        Colaborador colaboradorExistente = colaboradorRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("COLABORADOR NO ENCONTRADO!"));
+    public ColaboradorDTO actualizarColaborador(Integer id, ColaboradorDTO dto) {
+        log.info("Actualizando colaborador con ID: {}", id);
 
-        if (colaborador.getNombreColaborador() != null){
-            colaboradorExistente.setNombreColaborador(colaborador.getNombreColaborador());
+        Colaborador existente = colaboradorRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.error("Colaborador con ID {} no encontrado", id);
+                    return new RuntimeException("Colaborador no encontrado");
+                });
+
+        existente.setNombreColaborador(dto.getNombreColaborador());
+
+        if (dto.getCargoId() != null) {
+            Cargo cargo = cargoRepository.findById(dto.getCargoId())
+                    .orElseThrow(() -> new RuntimeException("Cargo no encontrado"));
+            existente.setCargo(cargo);
         }
-        return colaboradorRepository.save(colaboradorExistente);
+
+        if (dto.getLocalId() != null) {
+            Local local = localRepository.findById(dto.getLocalId())
+                    .orElseThrow(() -> new RuntimeException("Local no encontrado"));
+            existente.setLocal(local);
+        }
+
+        Colaborador actualizado = colaboradorRepository.save(existente);
+
+        log.info("Colaborador con ID {} actualizado correctamente", id);
+
+        return convertirADTO(actualizado);
     }
 
     // Metodo para convertir Entidades en DTO
