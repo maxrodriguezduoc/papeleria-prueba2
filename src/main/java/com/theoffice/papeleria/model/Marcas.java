@@ -11,28 +11,20 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "tipos_pago")
-public class TipoPago {
+@Table(name = "marcas")
+
+public class Marcas {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-<<<<<<< HEAD
-    private Integer idTipoPago;
-=======
-    private int id;
->>>>>>> 4ccf83db74090978a7de6d23206230c0ec87abd9
+    private Integer id_marcas;
 
-    @Column(nullable = false)
-    @Size(min = 3, max = 50, message = "El nombre del tipo de pago debe tener entre 3 y 50 caracteres")
-    @NotBlank(message = "El nombre del tipo de pago es obligatorio")
-    private String formaPago;
-<<<<<<< HEAD
+    @NotBlank (message = "El nombre  de la marca es obligatorio")
+    @Size(min = 2, max = 100, message = "El nombre  de la marca debe tener entre 2 y 100 caracteres")
+    @Column(nullable = false, length = 100)
+    private String nombre_marca;
 
-    private boolean activo;
-=======
->>>>>>> 4ccf83db74090978a7de6d23206230c0ec87abd9
 }

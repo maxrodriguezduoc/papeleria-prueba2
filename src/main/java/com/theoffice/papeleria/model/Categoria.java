@@ -20,6 +20,7 @@ import lombok.NoArgsConstructor;
 public class Categoria {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+<<<<<<< HEAD
     private Integer idCategoria;
 
     @Column(nullable = false, length = 50)
@@ -29,4 +30,12 @@ public class Categoria {
 
     @Column(nullable = false)
     private boolean activo;
+=======
+    private int id;
+
+    @Column(nullable = false)
+    @Size(min = 3, max = 50, message = "El nombre de la categoría debe tener entre 3 y 50 caracteres")
+    @NotBlank(message = "El nombre de la categoría es obligatorio")
+    private String nombre;
+>>>>>>> 4ccf83db74090978a7de6d23206230c0ec87abd9
 }
