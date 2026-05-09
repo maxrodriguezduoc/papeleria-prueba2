@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,7 +31,7 @@ public class Transferencia {
     @Column(nullable = false)
     @NotBlank(message = "El número de cuenta de origen es obligatorio")
     @Size(min = 10, max = 20, message = "El número de cuenta de origen debe tener entre 10 y 20 caracteres")
-    private int numeroCuentaOrigen;
+    private String numeroCuentaOrigen;
 
     @Column(nullable = false)
     @NotBlank(message = "El banco de destino es obligatorio")
@@ -40,9 +41,12 @@ public class Transferencia {
     @Column(nullable = false)
     @NotBlank(message = "El número de cuenta de destino es obligatorio")
     @Size(min = 10, max = 20, message = "El número de cuenta de destino debe tener entre 10 y 20 caracteres")
-    private Integer numeroCuentaDestino;
+    private String numeroCuentaDestino;
 
     @Column(nullable = false)
-    @NotBlank(message = "El monto es obligatorio")
-    private double monto;
+    @Positive(message = "El monto debe ser mayor a 0")
+    private Integer monto;
+
+    @Column(nullable = false)
+    private boolean activo;
 }

@@ -29,10 +29,10 @@ public class ClienteService {
 
         cliente.setActivo(true);
 
-        clienteRepository.save(cliente);
-        log.info("Cliente registrado con éxito en TheOffice. ID asignado: {}", cliente.getIdCliente());
+        Cliente guardado = clienteRepository.save(cliente);
+        log.info("Cliente registrado con éxito en TheOffice. ID asignado: {}", guardado.getIdCliente());
 
-        return convertirADTO(cliente);
+        return convertirADTO(guardado);
     }
 
     public List<ClienteDTO> obtenerTodos() {

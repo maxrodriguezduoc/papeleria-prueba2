@@ -29,10 +29,10 @@ public class TipoPagoService {
         tipoPago.setFormaPago(tipoPago.getFormaPago().trim());
         tipoPago.setActivo(true);
 
-        tipoPagoRepository.save(tipoPago);
-        log.info("Tipo de pago registrado con éxito. ID asignado: {}", tipoPago.getIdTipoPago());
+        TipoPago guardado = tipoPagoRepository.save(tipoPago);
+        log.info("Tipo de pago registrado con éxito. ID asignado: {}", guardado.getIdTipoPago());
 
-        return convertirADTO(tipoPago);
+        return convertirADTO(guardado);
     }
 
     public List<TipoPagoDTO> obtenerTodos() {
