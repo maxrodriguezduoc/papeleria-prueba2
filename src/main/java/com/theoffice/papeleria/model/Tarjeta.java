@@ -51,5 +51,6 @@ public class Tarjeta {
     @Size(min = 3, max = 3, message = "El CVV debe tener 3 dígitos")
     private String cvv;
 
+    @Column(nullable = false)
     private boolean activo;
 }

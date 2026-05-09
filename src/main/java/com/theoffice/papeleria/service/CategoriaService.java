@@ -26,10 +26,10 @@ public class CategoriaService {
             throw new RuntimeException("El nombre de la categoría es obligatorio y no puede estar vacío.");
         }
         
-        categoriaRepository.save(categoria);
-        log.info("Categoría registrada con éxito. ID asignado: {}", categoria.getIdCategoria());
+        Categoria guardada = categoriaRepository.save(categoria);
+        log.info("Categoría registrada con éxito. ID asignado: {}", guardada.getIdCategoria());
 
-        return convertirADTO(categoria);
+        return convertirADTO(guardada);
     }
 
     public List<CategoriaDTO> obtenerTodas() {

@@ -43,10 +43,10 @@ public class TarjetaService {
         tarjeta.setNombreBanco(tarjeta.getNombreBanco().trim());
         tarjeta.setActivo(true);
 
-        tarjetaRepository.save(tarjeta);
-        log.info("Tarjeta registrada con éxito. ID asignado: {}", tarjeta.getIdTarjeta());
+        Tarjeta guardada = tarjetaRepository.save(tarjeta);
+        log.info("Tarjeta registrada con éxito. ID asignado: {}", guardada.getIdTarjeta());
 
-        return convertirADTO(tarjeta);
+        return convertirADTO(guardada);
     }
 
     public List<TarjetaDTO> obtenerTodas() {

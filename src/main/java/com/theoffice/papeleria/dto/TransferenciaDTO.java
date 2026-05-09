@@ -6,8 +6,9 @@ import lombok.Data;
 public class TransferenciaDTO {
     private Integer idTransferencia;
     private String bancoOrigen;
-    private Integer numeroCuentaOrigen;
+    private String numeroCuentaOrigen;
     private String bancoDestino;
-    private Integer numeroCuentaDestino;
+    private String numeroCuentaDestino;
     private double monto;
+    private boolean activo;
 }
