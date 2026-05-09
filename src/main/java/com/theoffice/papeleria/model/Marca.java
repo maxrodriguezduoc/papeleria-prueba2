@@ -11,33 +11,25 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-<<<<<<< HEAD
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-=======
->>>>>>> 4ccf83db74090978a7de6d23206230c0ec87abd9
-@Entity
-@Table(name = "tipo_productos")
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class TiposProductos {
+@NoArgsConstructor
+@Entity
+@Table(name = "marca")
+
+public class Marca {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id_tipo_producto;
+    private Integer id_marcas;
 
-    @NotBlank (message = "La descripcion del producto es obligatoria")
-    @Size(min = 3, max = 100, message = "La descripcion del producto debe tener entre 3 y 100 caracteres")
+    @NotBlank (message = "El nombre  de la marca es obligatorio")
+    @Size(min = 2, max = 100, message = "El nombre  de la marca debe tener entre 2 y 100 caracteres")
     @Column(nullable = false, length = 100)
-    private String nombre;
+    private String nombre_marca;
 
-<<<<<<< HEAD
-    
-
-=======
->>>>>>> 4ccf83db74090978a7de6d23206230c0ec87abd9
-
-
-
+    @Column(name = "activo", nullable = false)
+    private boolean activo = true;
 }

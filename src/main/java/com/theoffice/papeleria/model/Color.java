@@ -11,7 +11,13 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+<<<<<<< HEAD
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
+=======
+
+>>>>>>> 4ccf83db74090978a7de6d23206230c0ec87abd9
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -27,6 +33,12 @@ public class Color {
     @Column(nullable = false, length = 100)
     private String nombre_color;
 
+<<<<<<< HEAD
+    @Column(name = "activo", nullable = false)
+    private boolean activo = true;
+
+=======
+>>>>>>> 4ccf83db74090978a7de6d23206230c0ec87abd9
 
 
 }
