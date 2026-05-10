@@ -4,7 +4,7 @@ import com.theoffice.papeleria.dto.PagoDTO;
 import com.theoffice.papeleria.model.Pago;
 import com.theoffice.papeleria.model.Ventas;
 import com.theoffice.papeleria.repository.PagoRepository;
-import com.theoffice.papeleria.repository.VentaRepository;
+import com.theoffice.papeleria.repository.VentasRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,17 +21,14 @@ public class PagoService {
     private PagoRepository pagoRepository;
 
     @Autowired
-    private VentaRepository ventaRepository;
+    private VentasRepository ventasRepository;
 
-    // 1. REGISTRAR UN PAGO (Simplificado al máximo)
     public PagoDTO crear(Pago pago) {
         log.info("Iniciando registro de pago para la Venta ID: {}", pago.getVenta().getId_venta());
 
-        // Aseguramos que la venta asociada realmente exista en la base de datos
-        Ventas venta = ventaRepository.findById(pago.getVenta().getId_venta())
+        Ventas venta = ventasRepository.findById(pago.getVenta().getId_venta())
                 .orElseThrow(() -> new RuntimeException("La venta asociada al pago no existe."));
 
-        // Validaciones de integridad básicas de los campos opcionales
         String tipo = pago.getTipoPago().getFormaPago();
         if ("Tarjeta".equalsIgnoreCase(tipo) && pago.getTarjeta() == null) {
             log.error("Falla al pagar: Se seleccionó Tarjeta pero el objeto Tarjeta viene nulo");
@@ -51,7 +48,6 @@ public class PagoService {
         return convertirADTO(guardado);
     }
 
-    @Transactional(readOnly = true)
     public List<PagoDTO> obtenerPagosPorVenta(Integer idVenta) {
         log.info("Buscando historial de pagos activos para la Venta ID: {}", idVenta);
         
