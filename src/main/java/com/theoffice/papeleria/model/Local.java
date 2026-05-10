@@ -45,7 +45,7 @@ public class Local {
     private boolean activo;
 
     @ManyToOne
-    @JoinColumn(name = "comuna_id", nullable = false)
+    @JoinColumn(name = "id_comuna", nullable = false)
     private Comuna comuna;
 
     @OneToMany(mappedBy = "local", cascade = CascadeType.ALL, orphanRemoval = true)

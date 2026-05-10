@@ -1,5 +1,9 @@
 package com.theoffice.papeleria.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,6 +16,7 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -39,11 +44,21 @@ public class Producto {
     @Column(nullable = false)
     private Integer stock;
 
-
     @Column(nullable = false)
     private boolean activo = true;
 
+    @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Categorias> categorias = new ArrayList<>();
 
-    
+    // 2. Relación con Colores Puente
+    @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Colores> colores = new ArrayList<>();
 
+    // 3. Relación con Marcas Puente
+    @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Marcas> marcas = new ArrayList<>();
+
+    // 4. Relación con Tipos de Producto Puente
+    @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TiposProducto> tiposProducto = new ArrayList<>();
 }
