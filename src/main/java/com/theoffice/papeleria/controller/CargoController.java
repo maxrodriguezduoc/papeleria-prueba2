@@ -18,7 +18,7 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@RequestMapping("/api/cargos")
+@RequestMapping("/api/v1/cargos")
 @Slf4j
 public class CargoController {
 

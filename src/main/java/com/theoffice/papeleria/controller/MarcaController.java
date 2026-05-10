@@ -22,7 +22,7 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@RequestMapping("/api/marcas")
+@RequestMapping("/api/v1/marcas")
 @Slf4j
 public class MarcaController {
      @Autowired
