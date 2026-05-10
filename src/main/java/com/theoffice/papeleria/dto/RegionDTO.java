@@ -1,6 +1,5 @@
 package com.theoffice.papeleria.dto;
 
-import jakarta.persistence.Column;
 import lombok.Data;
 
 @Data

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.theoffice.papeleria.dto.ProductoDTO;
 import com.theoffice.papeleria.dto.VentaDTO;
+import com.theoffice.papeleria.model.Pago;
 import com.theoffice.papeleria.model.Producto;
 import com.theoffice.papeleria.model.Venta;
 import com.theoffice.papeleria.repository.VentaRepository;
@@ -35,6 +36,27 @@ public class VentaService {
         if (producto.getStock() < venta.getCantidad()) {
             log.error("Error de stock: Pedido {}, Disponible {}", venta.getCantidad(), producto.getStock());
             throw new RuntimeException("No hay suficiente stock para realizar esta venta.");
+        }
+
+        if (venta.getPagos() == null || venta.getPagos().isEmpty()) {
+            log.error("Falla al crear venta: No se registraron métodos de pago");
+            throw new RuntimeException("Debe ingresar al menos un método de pago para procesar la venta.");
+        }
+
+        // 1. Validar que la suma de los pagos coincida exactamente con el total de la venta
+        int sumaPagos = venta.getPagos().stream()
+                .mapToInt(Pago::getMonto)
+                .sum();
+
+        if (sumaPagos != venta.getTotal_venta()) {
+            log.error("La suma de los pagos (${}) no coincide con el total de la venta (${})", sumaPagos, venta.getTotal_venta());
+            throw new RuntimeException("El monto total de los pagos ingresados debe ser exactamente igual al total de la venta.");
+        }
+
+        // 2. Asociar físicamente cada pago a la venta
+        for (Pago pago : venta.getPagos()) {
+            pago.setVenta(venta);
+            pago.setActivo(true);
         }
 
         venta.setTotal_venta(producto.getPrecio_producto() * venta.getCantidad());
@@ -100,8 +122,4 @@ public class VentaService {
         dto.setNombreProducto(venta.getProducto().getNombre_producto());
         return dto;
     }
-
-
-
-
 }
