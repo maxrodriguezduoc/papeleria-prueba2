@@ -19,7 +19,7 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@RequestMapping("/api/colores")
+@RequestMapping("/api/v1/colores")
 @Slf4j
 public class ColorController {
     @Autowired

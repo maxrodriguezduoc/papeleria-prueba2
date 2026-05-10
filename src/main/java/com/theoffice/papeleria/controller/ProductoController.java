@@ -21,7 +21,7 @@ import com.theoffice.papeleria.service.ProductoService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 @RestController
-@RequestMapping("/api/productos")
+@RequestMapping("/api/v1/productos")
 @Slf4j
 
 public class ProductoController {
