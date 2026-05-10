@@ -4,21 +4,21 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
-@Table(name = "cargos")
+@Table(name = "regiones")
 @Data
-public class Cargos {
+public class Regiones {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idCargos;
+    private Integer idRegiones;
 
     @ManyToOne
-    @JoinColumn(name = "id_colaborador", nullable = false)
-    private Colaborador colaborador;
+    @JoinColumn(name = "id_region", nullable = false)
+    private Region region;
 
     @ManyToOne
-    @JoinColumn(name = "id_cargo", nullable = false)
-    private Cargo cargo;
+    @JoinColumn(name = "id_comuna", nullable = false)
+    private Comuna comuna;
 
     @Column(nullable = false)
     private boolean activo;

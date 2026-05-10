@@ -4,21 +4,21 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
-@Table(name = "cargos")
+@Table(name = "locales")
 @Data
-public class Cargos {
+public class Locales {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idCargos;
+    private Integer idLocales;
 
     @ManyToOne
-    @JoinColumn(name = "id_colaborador", nullable = false)
-    private Colaborador colaborador;
+    @JoinColumn(name = "id_local", nullable = false)
+    private Local local;
 
     @ManyToOne
-    @JoinColumn(name = "id_cargo", nullable = false)
-    private Cargo cargo;
+    @JoinColumn(name = "id_comuna", nullable = false)
+    private Comuna comuna;
 
     @Column(nullable = false)
     private boolean activo;
