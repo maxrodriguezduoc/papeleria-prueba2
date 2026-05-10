@@ -1,7 +1,6 @@
 package com.theoffice.papeleria.controller;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,11 +12,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.theoffice.papeleria.dto.MarcaDTO;
 import com.theoffice.papeleria.model.Marca;
 import com.theoffice.papeleria.service.MarcaService;
-
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,7 +25,7 @@ public class MarcaController {
     @Autowired
     private MarcaService marcaService;
 
-    // 1. CREAR MARCA
+    
     @PostMapping
     public ResponseEntity<MarcaDTO> crear(@Valid @RequestBody Marca marca) {
         log.info("API REST - POST crear marca: {}", marca.getNombre_marca());
@@ -36,7 +33,7 @@ public class MarcaController {
         return new ResponseEntity<>(nuevaMarca, HttpStatus.CREATED);
     }
 
-    // 2. OBTENER TODAS LAS MARCAS ACTIVAS
+    
     @GetMapping
     public ResponseEntity<List<MarcaDTO>> obtenerTodas() {
         log.info("API REST - GET listar marcas activas");
