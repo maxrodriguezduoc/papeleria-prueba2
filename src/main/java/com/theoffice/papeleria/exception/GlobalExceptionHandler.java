@@ -17,7 +17,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 
-    // 2. CAPTURAR ERRORES INESPERADOS DEL SISTEMA (Ej: Caída de base de datos)
+    // 2. CAPTURAR ERRORES INESPERADOS DEL SISTEMA
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> manejarErroresGenerales(Exception e) {
         log.error("ERROR CRÍTICO NO CONTROLADO: ", e);
