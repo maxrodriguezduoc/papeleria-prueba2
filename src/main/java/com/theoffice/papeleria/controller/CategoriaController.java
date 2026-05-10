@@ -20,7 +20,7 @@ public class CategoriaController {
     @Autowired
     private CategoriaService categoriaService;
 
-    // 1. CREAR CATEGORIA MAESTRA
+    // 1. CREAR CATEGORIA
     // Retorna HTTP 201 Created
     @PostMapping
     public ResponseEntity<CategoriaDTO> crear(@Valid @RequestBody Categoria categoria) {

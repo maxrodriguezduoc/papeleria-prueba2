@@ -21,7 +21,7 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@RequestMapping("/api/regiones")
+@RequestMapping("/api/v1/regiones")
 @Slf4j
 public class RegionController {
 
