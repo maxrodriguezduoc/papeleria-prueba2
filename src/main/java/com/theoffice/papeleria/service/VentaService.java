@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 public class VentaService {
 
     @Autowired
-    private VentaRepository ventasRepository;
+    private VentaRepository ventaRepository;
 
     @Autowired
     private ProductoService productoService;
@@ -48,7 +48,7 @@ public class VentaService {
         
         productoService.actualizarProducto(idProducto, productoUpdate);
 
-        Venta ventaGuardada = ventasRepository.save(venta);
+        Venta ventaGuardada = ventaRepository.save(venta);
         
         log.info("Venta creada exitosamente con ID: {}", ventaGuardada.getId_venta());
         
@@ -57,36 +57,36 @@ public class VentaService {
 
     public List<VentaDTO> obtenerTodos() {
         log.info("Consultando el listado de ventas");
-        return ventasRepository.findAll().stream()
+        return ventaRepository.findAll().stream()
                  .map(this::convertirADTO)
                  .toList();
     }
 
     public VentaDTO buscarPorId(Integer id) {
         log.info("Buscando venta con el ID: {}",id);
-        Venta ventas = ventasRepository.findById(id)
+        Venta ventas = ventaRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("¡Venta no encontrada!"));
         return convertirADTO(ventas);
     }
 
     public void eliminar(Integer id) {
         log.info("Esta eliminando la venta con el ID: {}",id);
-        Venta venta = ventasRepository.findById(id)
+        Venta venta = ventaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Id de venta no encontrada"));
         venta.setActivo(false);
-        ventasRepository.save(venta);
+        ventaRepository.save(venta);
     }
 
     public VentaDTO actualizarVentas(Integer id,Venta ventas){
         log.info("Actualizando venta con ID: {}", id);
-        Venta venta = ventasRepository.findById(id).orElseThrow(() -> new RuntimeException("¡La venta no existe en los registros!"));
+        Venta venta = ventaRepository.findById(id).orElseThrow(() -> new RuntimeException("¡La venta no existe en los registros!"));
         if(ventas.getCantidad() != null){
             venta.setCantidad(ventas.getCantidad());
         }
         if(ventas.getTotal_venta() != null){
             venta.setTotal_venta(ventas.getTotal_venta());
         }
-        ventasRepository.save(ventas);
+        ventaRepository.save(ventas);
         return convertirADTO(venta);
     }
 
