@@ -21,7 +21,7 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@RequestMapping("/api/comunas")
+@RequestMapping("/api/v1/comunas")
 @Slf4j
 public class ComunaController {
 

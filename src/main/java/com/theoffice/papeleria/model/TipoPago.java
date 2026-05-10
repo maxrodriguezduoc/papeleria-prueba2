@@ -27,5 +27,6 @@ public class TipoPago {
     @NotBlank(message = "El nombre del tipo de pago es obligatorio")
     private String formaPago;
 
+    @Column(nullable = false)
     private boolean activo;
 }

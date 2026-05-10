@@ -21,7 +21,7 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@RequestMapping("/api/colaboradores")
+@RequestMapping("/api/v1/colaboradores")
 @Slf4j
 public class ColaboradorController {
 
