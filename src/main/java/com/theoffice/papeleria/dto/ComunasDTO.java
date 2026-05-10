@@ -3,11 +3,10 @@ package com.theoffice.papeleria.dto;
 import lombok.Data;
 
 @Data
-public class LocalDTO {
+public class ComunasDTO {
 
-    private Integer idLocal;
-    private String nombreLocal;
-    private String direccion;
+    private Integer idComunas;
+    private Integer localId;
     private Integer comunaId;
     private boolean activo;
 }

@@ -8,59 +8,97 @@ import com.theoffice.papeleria.dto.CargoDTO;
 import com.theoffice.papeleria.model.Cargo;
 import com.theoffice.papeleria.repository.CargoRepository;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Transactional
+@Slf4j
 public class CargoService {
 
     @Autowired
     private CargoRepository cargoRepository;
 
-    // Obtener una lista de los cargos
-    public List<CargoDTO> obtenerTodos(){
+    public List<CargoDTO> obtenerTodos() {
+        log.info("Obteniendo lista de todos los cargos disponibles!");
+
         return cargoRepository.findAll().stream()
-                    .map(this::convertirADTO)
-                    .toList();
+            .filter(Cargo::isActivo)
+            .map(this::convertirADTO)
+            .toList();
     }
 
-    // Metodo para buscar por Cargo por ID
-    public CargoDTO buscarPorId(Integer id){
+    public CargoDTO buscarPorId(Integer id) {
+        log.info("Buscando cargo con ID: {}", id);
+
         Cargo cargo = cargoRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("CARGO NO ENCONTRADO!"));
+                .orElseThrow(() -> new RuntimeException("Cargo no encontrado!"));
+
+        if (!cargo.isActivo()) {
+            log.warn("Cargo inactivo!");
+            throw new RuntimeException("El Cargo no se encuentra disponible!");
+        }
+
         return convertirADTO(cargo);
     }
 
-    // Metodo para eliminar Cargo
-    public String eliminarCargo(Integer id){
-        try {
-            Cargo cargo = cargoRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("NO SE PUEDE ELIMINAR! CARGO NO ENCONTRADO!"));
+    public void eliminarCargo(Integer id) {
+        log.warn("Intentando eliminar cargo con ID: {}", id);
 
-            cargoRepository.delete(cargo);
-            return "CARGO " + cargo.getNombreCargo() + " ELIMINADO!";
-        } catch (Exception e) {
-            return e.getMessage();
+        Cargo cargo = cargoRepository.findById(id)
+                .orElseThrow(() -> 
+                new RuntimeException("Error al eliminar! El ID ingresado no existe!"));
+
+        if (!cargo.isActivo()) {
+            log.info("El cargo seleccionado se encuentra inactivo!");
+            return;
         }
+
+        cargo.setActivo(false);
+        cargoRepository.save(cargo);
+
+        log.info("El cargo se ha desactivado exitosamente!");
     }
 
-    // Metodo para publicar un Cargo
-    public Cargo guardarCargo(Cargo cargo){
-        return cargoRepository.save(cargo);
+    public CargoDTO guardarCargo(CargoDTO dto) {
+        log.info("Guardando nuevo cargo: {}", dto.getNombreCargo());
+
+        if (dto.getNombreCargo() == null || dto.getNombreCargo().trim().isEmpty()) {
+            log.error("Nombre de Cargo no puede estar vacio!");
+            throw new RuntimeException("Nombre de Cargo obligatorio!");
+        }
+
+        Cargo cargo = new Cargo();
+        cargo.setNombreCargo(dto.getNombreCargo());
+        cargo.setActivo(true);
+
+        Cargo guardado = cargoRepository.save(cargo);
+
+        return convertirADTO(guardado);
     }
 
-    // Metodo para actualizar cargo
-    public Cargo actualizarCargo(Integer id, Cargo cargo){
+    public CargoDTO actualizarCargo(Integer id, CargoDTO dto) {
+        log.info("Actualizando cargo!");
+
         Cargo cargoExistente = cargoRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("CARGO NO ENCONTRADO!"));
+                .orElseThrow(() -> new RuntimeException("Error al actualizar! Cargo no encontrado!"));
 
-        if (cargo.getNombreCargo() != null){
-            cargoExistente.setNombreCargo(cargo.getNombreCargo());
+        if (!cargoExistente.isActivo()) {
+            throw new RuntimeException("Error al actualizar! Cargo inactivo!");
         }
-        return cargoRepository.save(cargoExistente);
+
+        if (dto.getNombreCargo() == null || dto.getNombreCargo().trim().isEmpty()) {
+            throw new RuntimeException("Nombre de cargo es obligatorio!");
+        }
+
+        cargoExistente.setNombreCargo(dto.getNombreCargo().trim());
+        cargoRepository.save(cargoExistente);
+
+        log.info("Cargo actualizado con exito!");
+
+        return convertirADTO(cargoExistente);
     }
 
-    // Metodo para convertir Entidades en DTO
-    private CargoDTO convertirADTO(Cargo cargo){
+    private CargoDTO convertirADTO(Cargo cargo) {
         CargoDTO dto = new CargoDTO();
         dto.setIdCargo(cargo.getIdCargo());
         dto.setNombreCargo(cargo.getNombreCargo());
