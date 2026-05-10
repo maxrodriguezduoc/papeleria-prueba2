@@ -10,13 +10,14 @@ import com.theoffice.papeleria.model.Marca;
 import com.theoffice.papeleria.repository.MarcaRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+
 @Slf4j
 @Service
 @Transactional
 public class MarcaService {
 
     @Autowired
-    private MarcaRepository marcasRepository;
+    private MarcaRepository marcaRepository;
 
     public MarcaDTO crearMarca(Marca marca){
         log.info("Intetando registrar una nueva marca: {}", marca.getNombre_marca());
@@ -27,7 +28,7 @@ public class MarcaService {
 
         marca.setNombre_marca(marca.getNombre_marca().trim());
         marca.setActivo(true);
-        marcasRepository.save(marca);
+        marcaRepository.save(marca);
 
         log.info("Marca registrada con exito. Id aignado para la marca es: {}", marca.getId_marcas());
         return convertirADTO(marca);
@@ -35,7 +36,7 @@ public class MarcaService {
 
     public List<MarcaDTO> obtenerTodos(){
         log.info("Consultando listado de marcas activas");
-        return marcasRepository.findAll().stream()
+        return marcaRepository.findAll().stream()
                 .map(this::convertirADTO)
                 .toList();
     }
@@ -43,7 +44,7 @@ public class MarcaService {
 
     public MarcaDTO buscarPorId(Integer id){
         log.info("Buscando marca con el ID: {}", id);
-        Marca marcas = marcasRepository.findById(id)
+        Marca marcas = marcaRepository.findById(id)
             .orElseThrow(()-> new RuntimeException("¡Marca no encontrado!"));
         return convertirADTO(marcas);
 
@@ -51,26 +52,25 @@ public class MarcaService {
 
     public void eliminarMarca(Integer id){
         log.info("Esta eliminando la marca con el ID: {}", id);
-        Marca marca = marcasRepository.findById(id)
+        Marca marca = marcaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("ID no encontrado"));
 
         marca.setActivo(false);
-        marcasRepository.save(marca);
+        marcaRepository.save(marca);
     }    
 
     public MarcaDTO actualizarMarca(Integer id, Marca marcas){
         log.info("Actualizando marca con ID: {}", id);
-        Marca marca = marcasRepository.findById(id).orElseThrow(() -> new RuntimeException("No existe la marca con el ID:" + id));
+        Marca marca = marcaRepository.findById(id).orElseThrow(() -> new RuntimeException("No existe la marca con el ID:" + id));
 
         if(marca.getNombre_marca()!= null){
             marca.setNombre_marca(marca.getNombre_marca().trim());
         }
-        marcasRepository.save(marca);
+        marcaRepository.save(marca);
         return convertirADTO(marca);
 
     }
     
-
     private MarcaDTO convertirADTO(Marca marcas){
         MarcaDTO dto = new MarcaDTO();
         dto.setId_marcas(marcas.getId_marcas());
