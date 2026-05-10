@@ -1,6 +1,7 @@
 package com.theoffice.papeleria.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Positive;
 import lombok.Data;
 
 @Data
@@ -24,7 +25,8 @@ public class Productos {
     private Integer cantidad; // Cuántas unidades se compraron
 
     @Column(nullable = false)
-    private Integer precioUnitario; // Precio al momento de la venta
+    @Positive(message = "el precio debe ser mayor a 0")
+    private Integer precioUnitario;
 
     @Column(nullable = false)
     private boolean activo;

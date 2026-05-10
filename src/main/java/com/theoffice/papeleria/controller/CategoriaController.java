@@ -20,8 +20,6 @@ public class CategoriaController {
     @Autowired
     private CategoriaService categoriaService;
 
-    // 1. CREAR CATEGORIA
-    // Retorna HTTP 201 Created
     @PostMapping
     public ResponseEntity<CategoriaDTO> crear(@Valid @RequestBody Categoria categoria) {
         log.info("API REST - Petición POST para crear una nueva categoría: '{}'", categoria.getNombre());
@@ -30,8 +28,6 @@ public class CategoriaController {
         return new ResponseEntity<>(nuevaCategoria, HttpStatus.CREATED);
     }
 
-    // 2. OBTENER TODAS LAS CATEGORIAS ACTIVAS
-    // Retorna HTTP 200 OK (o HTTP 204 No Content si la lista está vacía)
     @GetMapping
     public ResponseEntity<List<CategoriaDTO>> obtenerTodas() {
         log.info("API REST - Petición GET para listar todas las categorías activas");
@@ -46,8 +42,6 @@ public class CategoriaController {
         return ResponseEntity.ok(categorias);
     }
 
-    // 3. OBTENER CATEGORÍA POR ID
-    // Retorna HTTP 200 OK
     @GetMapping("/{id}")
     public ResponseEntity<CategoriaDTO> obtenerPorId(@PathVariable Integer id) {
         log.info("API REST - Petición GET para buscar la categoría con ID: {}", id);
@@ -56,8 +50,6 @@ public class CategoriaController {
         return ResponseEntity.ok(categoria);
     }
 
-    // 4. ACTUALIZAR CATEGORIA
-    // Retorna HTTP 200 OK
     @PutMapping("/{id}")
     public ResponseEntity<CategoriaDTO> actualizar(@PathVariable Integer id, @Valid @RequestBody Categoria categoria) {
         log.info("API REST - Petición PUT para actualizar la categoría con ID: {}", id);
@@ -66,8 +58,6 @@ public class CategoriaController {
         return ResponseEntity.ok(actualizada);
     }
 
-    // 5. ELIMINAR CATEGORIA
-    // Retorna HTTP 200 OK con mensaje de confirmación
     @DeleteMapping("/{id}")
     public ResponseEntity<String> eliminar(@PathVariable Integer id) {
         log.warn("API REST - Petición DELETE para baja lógica de la categoría con ID: {}", id);

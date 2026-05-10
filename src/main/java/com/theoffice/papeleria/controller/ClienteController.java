@@ -20,8 +20,6 @@ public class ClienteController {
     @Autowired
     private ClienteService clienteService;
 
-    // 1. CREAR CLIENTE
-    // Retorna HTTP 201 Created
     @PostMapping
     public ResponseEntity<ClienteDTO> crear(@Valid @RequestBody Cliente cliente) {
         log.info("API REST - Petición POST para crear un cliente con RUT: {}", cliente.getRut());
@@ -30,8 +28,6 @@ public class ClienteController {
         return new ResponseEntity<>(nuevoCliente, HttpStatus.CREATED);
     }
 
-    // 2. OBTENER TODOS LOS CLIENTES ACTIVOS
-    // Retorna HTTP 200 OK
     @GetMapping
     public ResponseEntity<List<ClienteDTO>> obtenerTodos() {
         log.info("API REST - Petición GET para listar todos los clientes activos");
@@ -46,8 +42,6 @@ public class ClienteController {
         return ResponseEntity.ok(clientes);
     }
 
-    // 3. OBTENER CLIENTE POR ID
-    // Retorna HTTP 200 OK
     @GetMapping("/{id}")
     public ResponseEntity<ClienteDTO> obtenerPorId(@PathVariable Integer id) {
         log.info("API REST - Petición GET para buscar cliente con ID: {}", id);
@@ -56,8 +50,6 @@ public class ClienteController {
         return ResponseEntity.ok(cliente);
     }
 
-    // 4. ACTUALIZAR CLIENTE
-    // Retorna HTTP 200 OK
     @PutMapping("/{id}")
     public ResponseEntity<ClienteDTO> actualizar(@PathVariable Integer id, @Valid @RequestBody Cliente cliente) {
         log.info("API REST - Petición PUT para actualizar el cliente con ID: {}", id);
@@ -66,8 +58,6 @@ public class ClienteController {
         return ResponseEntity.ok(actualizado);
     }
 
-    // 5. ELIMINAR / DAR DE BAJA CLIENTE (Borrado Lógico)
-    // Retorna HTTP 200 OK con un mensaje de confirmación
     @DeleteMapping("/{id}")
     public ResponseEntity<String> eliminar(@PathVariable Integer id) {
         log.warn("API REST - Petición DELETE para baja lógica del cliente con ID: {}", id);

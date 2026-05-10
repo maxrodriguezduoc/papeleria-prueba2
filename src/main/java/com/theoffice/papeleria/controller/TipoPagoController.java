@@ -20,7 +20,6 @@ public class TipoPagoController {
     @Autowired
     private TipoPagoService tipoPagoService;
 
-    // 1. CREAR TIPO DE PAGO
     @PostMapping
     public ResponseEntity<TipoPagoDTO> crear(@Valid @RequestBody TipoPago tipoPago) {
         log.info("API REST - Creando tipo de pago: '{}'", tipoPago.getFormaPago());
@@ -28,7 +27,6 @@ public class TipoPagoController {
         return new ResponseEntity<>(nuevoTipo, HttpStatus.CREATED);
     }
 
-    // 2. LISTAR TIPOS DE PAGO ACTIVOS
     @GetMapping
     public ResponseEntity<List<TipoPagoDTO>> obtenerTodos() {
         log.info("API REST - Listando todos los tipos de pago activos");
@@ -42,7 +40,6 @@ public class TipoPagoController {
         return ResponseEntity.ok(tipos);
     }
 
-    // 3. OBTENER POR ID
     @GetMapping("/{id}")
     public ResponseEntity<TipoPagoDTO> obtenerPorId(@PathVariable Integer id) {
         log.info("API REST - Buscando tipo de pago con ID: {}", id);
@@ -50,7 +47,6 @@ public class TipoPagoController {
         return ResponseEntity.ok(tipoPago);
     }
 
-    // 4. ACTUALIZAR TIPO DE PAGO
     @PutMapping("/{id}")
     public ResponseEntity<TipoPagoDTO> actualizar(@PathVariable Integer id, @Valid @RequestBody TipoPago tipoPago) {
         log.info("API REST - Actualizando tipo de pago con ID: {}", id);
@@ -58,7 +54,6 @@ public class TipoPagoController {
         return ResponseEntity.ok(actualizado);
     }
 
-    // 5. ANULAR / ELIMINAR
     @DeleteMapping("/{id}")
     public ResponseEntity<String> eliminar(@PathVariable Integer id) {
         log.warn("API REST - Desactivando tipo de pago con ID: {}", id);
