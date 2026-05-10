@@ -5,9 +5,8 @@ import lombok.Data;
 @Data
 public class ComunasDTO {
 
-    private Integer idComuna;
-    private String nombreComuna;
-    private String codigoPostal;
+    private Integer idComunas;
+    private Integer localId;
+    private Integer comunaId;
     private boolean activo;
-    private Integer idRegion;
 }

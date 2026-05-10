@@ -19,13 +19,15 @@ public class ComunaService {
 
     @Autowired
     private ComunaRepository comunaRepository;
+
+    @Autowired
     private RegionRepository regionRepository;
 
     public List<ComunaDTO> obtenerTodos() {
         log.info("Obteniendo lista de comunas");
 
-        return comunaRepository.findAll()
-                .stream()
+        return comunaRepository.findAll().stream()
+                .filter(Comuna::isActivo)
                 .map(this::convertirADTO)
                 .toList();
     }
@@ -34,10 +36,12 @@ public class ComunaService {
         log.info("Buscando comuna con ID: {}", id);
 
         Comuna comuna = comunaRepository.findById(id)
-                .orElseThrow(() -> {
-                    log.error("Comuna con ID {} no encontrada", id);
-                    return new RuntimeException("Comuna no encontrada");
-                });
+                .orElseThrow(() -> new RuntimeException("Comuna no encontrada!"));
+
+        if (!comuna.isActivo()) {
+            log.warn("Comuna inactiva!");
+            throw new RuntimeException("Debe seleccionar una comuna activa!");
+        }
 
         return convertirADTO(comuna);
     }
@@ -46,33 +50,42 @@ public class ComunaService {
         log.info("Intentando eliminar comuna con ID: {}", id);
 
         Comuna comuna = comunaRepository.findById(id)
-                .orElseThrow(() -> {
-                    log.error("Comuna con ID {} no encontrada", id);
-                    return new RuntimeException("Comuna no encontrada");
-                });
+                .orElseThrow(() -> new RuntimeException("Error al eliminar comuna! Comuna no encontrada!"));
 
-        comunaRepository.delete(comuna);
+        if (!comuna.isActivo()) {
+            log.info("Comuna inactiva");
+            return;
+        }
 
-        log.info("Comuna con ID {} eliminada correctamente", id);
+        comuna.setActivo(false);
+        comunaRepository.save(comuna);
+
+        log.info("Comuna eliminada exitosamente!");
     }
 
     public ComunaDTO guardarComuna(ComunaDTO dto) {
         log.info("Creando comuna: {}", dto.getNombreComuna());
 
+        if (dto.getNombreComuna() == null || dto.getNombreComuna().trim().isEmpty()) {
+            throw new RuntimeException("Nombre de comuna obligatorio!");
+        }
+
         Region region = regionRepository.findById(dto.getRegionId())
-                .orElseThrow(() -> {
-                    log.error("Region con ID {} no encontrada", dto.getRegionId());
-                    return new RuntimeException("Region no encontrada");
-                });
+                .orElseThrow(() -> new RuntimeException("Region no encontrada!"));
+
+        if (!region.isActivo()) {
+            throw new RuntimeException("Se debe seleccionar una region activa");
+        }
 
         Comuna comuna = new Comuna();
-        comuna.setNombreComuna(dto.getNombreComuna());
+        comuna.setNombreComuna(dto.getNombreComuna().trim());
         comuna.setCodigoPostal(dto.getCodigoPostal());
         comuna.setRegion(region);
+        comuna.setActivo(true);
 
         Comuna guardada = comunaRepository.save(comuna);
 
-        log.info("Comuna creada con ID: {}", guardada.getIdComuna());
+        log.info("Comuna registrada exitosamente!");
 
         return convertirADTO(guardada);
     }
@@ -81,25 +94,35 @@ public class ComunaService {
         log.info("Actualizando comuna con ID: {}", id);
 
         Comuna existente = comunaRepository.findById(id)
-                .orElseThrow(() -> {
-                    log.error("Comuna con ID {} no encontrada", id);
-                    return new RuntimeException("Comuna no encontrada");
-                });
+                .orElseThrow(() -> new RuntimeException("Comuna no encontrada!"));
 
-        existente.setNombreComuna(dto.getNombreComuna());
+        if (!existente.isActivo()) {
+            throw new RuntimeException("Se debe seleccionar una comun activa!");
+        }
+
+        if (dto.getNombreComuna() == null || dto.getNombreComuna().trim().isEmpty()) {
+            throw new RuntimeException("Nombre de comuna obligatorio!");
+        }
+
+        existente.setNombreComuna(dto.getNombreComuna().trim());
         existente.setCodigoPostal(dto.getCodigoPostal());
 
         if (dto.getRegionId() != null) {
             Region region = regionRepository.findById(dto.getRegionId())
-                    .orElseThrow(() -> new RuntimeException("Region no encontrada"));
+                    .orElseThrow(() -> new RuntimeException("Region no encontrada!"));
+
+            if (!region.isActivo()) {
+                throw new RuntimeException("Se debe seleccionar una region activa!");
+            }
+
             existente.setRegion(region);
         }
 
-        Comuna actualizada = comunaRepository.save(existente);
+        comunaRepository.save(existente);
 
-        log.info("Comuna con ID {} actualizada correctamente", id);
+        log.info("Comuna actualizada exitosamente!");
 
-        return convertirADTO(actualizada);
+        return convertirADTO(existente);
     }
 
     private ComunaDTO convertirADTO(Comuna comuna) {
@@ -107,11 +130,8 @@ public class ComunaService {
         dto.setIdComuna(comuna.getIdComuna());
         dto.setNombreComuna(comuna.getNombreComuna());
         dto.setCodigoPostal(comuna.getCodigoPostal());
-
-        if (comuna.getRegion() != null) {
-            dto.setRegionId(comuna.getRegion().getIdRegion());
-        }
-
+        dto.setRegionId(comuna.getRegion().getIdRegion());
+        dto.setActivo(comuna.isActivo());
         return dto;
     }
 }

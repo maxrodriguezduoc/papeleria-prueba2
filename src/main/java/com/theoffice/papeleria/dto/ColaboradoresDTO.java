@@ -5,9 +5,8 @@ import lombok.Data;
 @Data
 public class ColaboradoresDTO {
 
-    private Integer idColaborador;
-    private String nombreColaborador;
+    private Integer idColaboradores;
+    private Integer colaboradorId;
+    private Integer cargoId;
     private boolean activo;
-    private Integer idCargo;
-    private Integer idLocal;
 }

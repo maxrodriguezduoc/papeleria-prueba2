@@ -9,4 +9,5 @@ public class ComunaDTO {
     private String nombreComuna;
     private String codigoPostal;
     private Integer regionId;
+    private boolean activo;
 }

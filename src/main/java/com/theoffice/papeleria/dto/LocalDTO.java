@@ -9,4 +9,5 @@ public class LocalDTO {
     private String nombreLocal;
     private String direccion;
     private Integer comunaId;
+    private boolean activo;
 }

@@ -9,4 +9,5 @@ public class ColaboradorDTO {
     private String nombreColaborador;
     private Integer cargoId;
     private Integer localId;
+    private boolean activo;
 }

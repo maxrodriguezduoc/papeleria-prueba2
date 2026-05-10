@@ -21,65 +21,81 @@ public class CargoService {
     public List<CargoDTO> obtenerTodos() {
         log.info("Obteniendo lista de todos los cargos disponibles!");
 
-        return cargoRepository.findAll()
-                .stream()
-                .map(this::convertirADTO)
-                .toList();
+        return cargoRepository.findAll().stream()
+            .filter(Cargo::isActivo)
+            .map(this::convertirADTO)
+            .toList();
     }
 
     public CargoDTO buscarPorId(Integer id) {
         log.info("Buscando cargo con ID: {}", id);
 
         Cargo cargo = cargoRepository.findById(id)
-                .orElseThrow(() -> {
-                    log.error("Cargo con ID {} no encontrado", id);
-                    return new RuntimeException("CARGO NO ENCONTRADO!");
-                });
+                .orElseThrow(() -> new RuntimeException("Cargo no encontrado!"));
+
+        if (!cargo.isActivo()) {
+            log.warn("Cargo inactivo!");
+            throw new RuntimeException("El Cargo no se encuentra disponible!");
+        }
 
         return convertirADTO(cargo);
     }
 
     public void eliminarCargo(Integer id) {
-        log.info("Intentando eliminar cargo con ID: {}", id);
+        log.warn("Intentando eliminar cargo con ID: {}", id);
 
         Cargo cargo = cargoRepository.findById(id)
-                .orElseThrow(() -> {
-                    log.error("No se puede eliminar. Cargo con ID {} no encontrado", id);
-                    return new RuntimeException("CARGO NO ENCONTRADO");
-                });
+                .orElseThrow(() -> 
+                new RuntimeException("Error al eliminar! El ID ingresado no existe!"));
 
-        cargoRepository.delete(cargo);
+        if (!cargo.isActivo()) {
+            log.info("El cargo seleccionado se encuentra inactivo!");
+            return;
+        }
 
-        log.info("Cargo celiminado exitosamente!");
+        cargo.setActivo(false);
+        cargoRepository.save(cargo);
+
+        log.info("El cargo se ha desactivado exitosamente!");
     }
 
     public CargoDTO guardarCargo(CargoDTO dto) {
         log.info("Guardando nuevo cargo: {}", dto.getNombreCargo());
 
-        Cargo cargo = convertirAEntidad(dto);
-        Cargo guardado = cargoRepository.save(cargo);
+        if (dto.getNombreCargo() == null || dto.getNombreCargo().trim().isEmpty()) {
+            log.error("Nombre de Cargo no puede estar vacio!");
+            throw new RuntimeException("Nombre de Cargo obligatorio!");
+        }
 
-        log.info("Cargo guardado exitosamente!");
+        Cargo cargo = new Cargo();
+        cargo.setNombreCargo(dto.getNombreCargo());
+        cargo.setActivo(true);
+
+        Cargo guardado = cargoRepository.save(cargo);
 
         return convertirADTO(guardado);
     }
 
     public CargoDTO actualizarCargo(Integer id, CargoDTO dto) {
-        log.info("Actualizando cargo con ID: {}", id);
+        log.info("Actualizando cargo!");
 
         Cargo cargoExistente = cargoRepository.findById(id)
-                .orElseThrow(() -> {
-                    log.error("No se puede actualizar. Cargo con ID {} no encontrado", id);
-                    return new RuntimeException("CARGO NO ENCONTRADO");
-                });
+                .orElseThrow(() -> new RuntimeException("Error al actualizar! Cargo no encontrado!"));
 
-        cargoExistente.setNombreCargo(dto.getNombreCargo());
+        if (!cargoExistente.isActivo()) {
+            throw new RuntimeException("Error al actualizar! Cargo inactivo!");
+        }
 
-        Cargo actualizado = cargoRepository.save(cargoExistente);
+        if (dto.getNombreCargo() == null || dto.getNombreCargo().trim().isEmpty()) {
+            throw new RuntimeException("Nombre de cargo es obligatorio!");
+        }
 
-        log.info("Cargo actualizado exitosamente!");
+        cargoExistente.setNombreCargo(dto.getNombreCargo().trim());
+        cargoRepository.save(cargoExistente);
 
-        return convertirADTO(actualizado);
+        log.info("Cargo actualizado con exito!");
+
+        return convertirADTO(cargoExistente);
     }
 
     private CargoDTO convertirADTO(Cargo cargo) {
@@ -87,12 +103,5 @@ public class CargoService {
         dto.setIdCargo(cargo.getIdCargo());
         dto.setNombreCargo(cargo.getNombreCargo());
         return dto;
-    }
-
-    private Cargo convertirAEntidad(CargoDTO dto) {
-        Cargo cargo = new Cargo();
-        cargo.setIdCargo(dto.getIdCargo());
-        cargo.setNombreCargo(dto.getNombreCargo());
-        return cargo;
     }
 }

@@ -39,6 +39,9 @@ public class Local {
     @Column(nullable = false, length = 60)
     private String direccion;
 
+    @Column(nullable = false)
+    private boolean activo;
+
     @ManyToOne
     @JoinColumn(name = "comuna_id", nullable = false)
     private Comuna comuna;

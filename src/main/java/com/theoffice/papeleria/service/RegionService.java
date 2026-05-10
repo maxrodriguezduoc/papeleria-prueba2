@@ -31,8 +31,8 @@ public class RegionService {
 
         Region region = regionRepository.findById(id)
                 .orElseThrow(() -> {
-                    log.error("Región con ID {} no encontrada", id);
-                    return new RuntimeException("Región no encontrada");
+                    log.error("Error al buscar! Region no encontrada!");
+                    return new RuntimeException("Regio no encontrada!");
                 });
 
         return convertirADTO(region);
@@ -43,24 +43,30 @@ public class RegionService {
 
         Region region = regionRepository.findById(id)
                 .orElseThrow(() -> {
-                    log.error("Región con ID {} no encontrada", id);
-                    return new RuntimeException("Región no encontrada");
+                    log.error("Error al buscar region! Region no encontrada!", id);
+                    return new RuntimeException("Región no encontrada!");
                 });
 
-        regionRepository.delete(region);
+        region.setActivo(false);
+        regionRepository.save(region);
 
-        log.info("Región eliminada exitosamente!");
+        log.info("Region eliminada exitosamente!!");
     }
 
     public RegionDTO guardarRegion(RegionDTO dto) {
         log.info("Creando región: {}", dto.getNombreRegion());
 
+        if (dto.getNombreRegion() == null || dto.getNombreRegion().trim().isEmpty()) {
+            throw new RuntimeException("Nombre de region obligatorio!");
+        }
+
         Region region = new Region();
-        region.setNombreRegion(dto.getNombreRegion());
+        region.setNombreRegion(dto.getNombreRegion().trim());
+        region.setActivo(true);
 
         Region guardada = regionRepository.save(region);
 
-        log.info("Región creada exitosamente");
+        log.info("Region guardada exitosamente!");
 
         return convertirADTO(guardada);
     }
@@ -70,11 +76,13 @@ public class RegionService {
 
         Region existente = regionRepository.findById(id)
                 .orElseThrow(() -> {
-                    log.error("Región con ID {} no encontrada", id);
-                    return new RuntimeException("Región no encontrada");
+                    log.error("Error al buscar region! Region no encontrada!");
+                    return new RuntimeException("Región no encontrada!");
                 });
 
-        existente.setNombreRegion(dto.getNombreRegion());
+        if (dto.getNombreRegion() != null) {
+            existente.setNombreRegion(dto.getNombreRegion().trim());
+        }
 
         Region actualizada = regionRepository.save(existente);
 
@@ -87,6 +95,7 @@ public class RegionService {
         RegionDTO dto = new RegionDTO();
         dto.setIdRegion(region.getIdRegion());
         dto.setNombreRegion(region.getNombreRegion());
+        dto.setActivo(region.isActivo());
         return dto;
     }
 }
