@@ -58,7 +58,7 @@ public class TipoPagoController {
         return ResponseEntity.ok(actualizado);
     }
 
-    // 5. ANULAR / ELIMINAR (Borrado Lógico)
+    // 5. ANULAR / ELIMINAR
     @DeleteMapping("/{id}")
     public ResponseEntity<String> eliminar(@PathVariable Integer id) {
         log.warn("API REST - Desactivando tipo de pago con ID: {}", id);
