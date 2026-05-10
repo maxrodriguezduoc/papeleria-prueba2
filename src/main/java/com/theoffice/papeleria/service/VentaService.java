@@ -9,6 +9,7 @@ import com.theoffice.papeleria.dto.ProductoDTO;
 import com.theoffice.papeleria.dto.VentaDTO;
 import com.theoffice.papeleria.model.Pago;
 import com.theoffice.papeleria.model.Producto;
+import com.theoffice.papeleria.model.Productos;
 import com.theoffice.papeleria.model.Venta;
 import com.theoffice.papeleria.repository.VentaRepository;
 
@@ -119,7 +120,12 @@ public class VentaService {
         dto.setTotal_venta(venta.getTotal_venta());
         dto.setFecha_venta(venta.getFecha_venta());
         dto.setActivo(venta.isActivo());
-        dto.setNombreProducto(venta.getProducto().getNombre_producto());
+        if (venta.getProductos() != null && !venta.getProductos().isEmpty()) {
+            Productos primerDetalle = venta.getProductos().get(0);
+            if (primerDetalle != null && primerDetalle.getProducto() != null) {
+                dto.setNombreProducto(primerDetalle.getProducto().getNombre_producto());
+            }
+        }
         return dto;
     }
 }

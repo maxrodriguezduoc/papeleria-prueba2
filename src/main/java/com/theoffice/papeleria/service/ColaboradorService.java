@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.theoffice.papeleria.dto.ColaboradorDTO;
 import com.theoffice.papeleria.model.Cargo;
 import com.theoffice.papeleria.model.Colaborador;
+import com.theoffice.papeleria.model.Colaboradores;
 import com.theoffice.papeleria.model.Local;
 import com.theoffice.papeleria.repository.CargoRepository;
 import com.theoffice.papeleria.repository.ColaboradorRepository;
@@ -95,8 +96,15 @@ public class ColaboradorService {
         Colaborador colaborador = new Colaborador();
         colaborador.setNombreColaborador(dto.getNombreColaborador().trim());
         colaborador.setCargo(cargo);
-        colaborador.setLocal(local);
         colaborador.setActivo(true);
+
+        Colaboradores puente = new Colaboradores();
+        puente.setColaborador(colaborador); // Enlace hacia el colaborador (Padre)
+        puente.setLocal(local);             // Enlace hacia la sucursal física
+        puente.setActivo(true);             // La asignación de la sucursal inicia activa
+
+        // Añadimos el registro puente a la lista del colaborador principal
+        colaborador.getLocales().add(puente);
 
         Colaborador guardado = colaboradorRepository.save(colaborador);
 
@@ -140,7 +148,14 @@ public class ColaboradorService {
                 throw new RuntimeException("Se debe asignar a un local activo!");
             }
 
-            existente.setLocal(local);
+            existente.getLocales().clear();
+
+            Colaboradores nuevoPuente = new Colaboradores();
+            nuevoPuente.setColaborador(existente);
+            nuevoPuente.setLocal(local);
+            nuevoPuente.setActivo(true);
+
+            existente.getLocales().add(nuevoPuente);
         }
 
         colaboradorRepository.save(existente);
@@ -151,12 +166,20 @@ public class ColaboradorService {
         }
 
     private ColaboradorDTO convertirADTO(Colaborador colaborador) {
-        ColaboradorDTO dto = new ColaboradorDTO();
-        dto.setIdColaborador(colaborador.getIdColaborador());
-        dto.setNombreColaborador(colaborador.getNombreColaborador());
+    ColaboradorDTO dto = new ColaboradorDTO();
+    dto.setIdColaborador(colaborador.getIdColaborador());
+    dto.setNombreColaborador(colaborador.getNombreColaborador());
+    dto.setActivo(colaborador.isActivo());
+
+    if (colaborador.getCargo() != null) {
         dto.setCargoId(colaborador.getCargo().getIdCargo());
-        dto.setLocalId(colaborador.getLocal().getIdLocal());
-        dto.setActivo(colaborador.isActivo());
-        return dto;
     }
+
+    if (colaborador.getLocales() != null && !colaborador.getLocales().isEmpty()) {
+        Integer idLocal = colaborador.getLocales().get(0).getLocal().getIdLocal();
+        dto.setLocalId(idLocal);
+    }
+
+    return dto;
+}
 }
