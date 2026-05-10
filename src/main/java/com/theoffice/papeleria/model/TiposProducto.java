@@ -2,7 +2,7 @@ package com.theoffice.papeleria.model;
 import jakarta.persistence.*;
 import lombok.Data;
 @Entity
-@Table(name = "tipo_productos")
+@Table(name = "tipos_producto")
 @Data
 public class TiposProducto {
     @Id

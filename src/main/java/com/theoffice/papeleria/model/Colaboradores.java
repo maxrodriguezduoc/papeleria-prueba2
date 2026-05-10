@@ -3,9 +3,9 @@ package com.theoffice.papeleria.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+@Data
 @Entity
 @Table(name = "colaboradores")
-@Data
 public class Colaboradores {
 
     @Id
@@ -13,12 +13,12 @@ public class Colaboradores {
     private Integer idColaboradores;
 
     @ManyToOne
-    @JoinColumn(name = "id_colaborador", nullable = false)
-    private Colaborador colaborador;
+    @JoinColumn(name = "id_local", nullable = false)
+    private Local local; // La tienda física donde trabaja
 
     @ManyToOne
-    @JoinColumn(name = "id_cargo", nullable = false)
-    private Cargo cargo;
+    @JoinColumn(name = "id_colaborador", nullable = false)
+    private Colaborador colaborador; // El empleado asociado
 
     @Column(nullable = false)
     private boolean activo;

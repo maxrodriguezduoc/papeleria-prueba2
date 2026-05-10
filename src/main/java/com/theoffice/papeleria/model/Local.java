@@ -1,7 +1,9 @@
 package com.theoffice.papeleria.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -46,6 +48,6 @@ public class Local {
     @JoinColumn(name = "comuna_id", nullable = false)
     private Comuna comuna;
 
-    @OneToMany(mappedBy = "local")
-    private List<Colaborador> colaboradores;
+    @OneToMany(mappedBy = "local", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Colaboradores> colaboradores = new ArrayList<>();
 }
