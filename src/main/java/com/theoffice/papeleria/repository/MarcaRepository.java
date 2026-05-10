@@ -8,6 +8,6 @@ import com.theoffice.papeleria.model.Marcas;
 
 
 @Repository
-public interface MarcasRepository extends JpaRepository <Marcas, Integer> {
+public interface MarcaRepository extends JpaRepository <Marcas, Integer> {
 
 }

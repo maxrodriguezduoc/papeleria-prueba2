@@ -11,25 +11,23 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "colores")
-public class Color {
+@Table(name = "marcas")
+
+public class Marca {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id_color;
+    private Integer id_marcas;
 
-    @NotBlank(message = "El nombre  del color es obligatorio")
-    @Size(min = 3, max = 100, message = "El nombre del color debe tener entre 3 y 100 caracteres")
+    @NotBlank (message = "El nombre  de la marca es obligatorio")
+    @Size(min = 2, max = 100, message = "El nombre  de la marca debe tener entre 2 y 100 caracteres")
     @Column(nullable = false, length = 100)
-    private String nombre_color;
-    
+    private String nombre_marca;
+
     @Column(name = "activo", nullable = false)
     private boolean activo = true;
-
-
 
 }

@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.theoffice.papeleria.model.Ventas;
 
 @Repository
-public interface VentasRepository extends JpaRepository <Ventas, Integer> {
+public interface VentaRepository extends JpaRepository <Ventas, Integer> {
 
 }
