@@ -20,7 +20,7 @@ public class Pago {
 
     @ManyToOne
     @JoinColumn(name = "id_venta", nullable = false)
-    private Ventas venta; // Relación con la Venta (Muchos pagos apuntan a una Venta)
+    private Venta venta; // Relación con la Venta (Muchos pagos apuntan a una Venta)
 
     @ManyToOne
     @JoinColumn(name = "id_tipo_pago", nullable = false)
