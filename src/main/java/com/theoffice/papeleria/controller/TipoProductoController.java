@@ -26,49 +26,37 @@ public class TipoProductoController {
     @Autowired
     private TipoProductoService tipoProductoService;
 
+    @PostMapping
+    public ResponseEntity<TipoProductoDTO> crear(@Valid @RequestBody TipoProducto tipoProducto) {
+        log.info("POST - Crear tipo de producto: {}", tipoProducto.getNombre());
+        TipoProductoDTO nuevo = tipoProductoService.crear(tipoProducto);
+        return new ResponseEntity<>(nuevo, HttpStatus.CREATED);
+    }
+
     @GetMapping
-    public ResponseEntity<?> obtenerActivos() {
+    public ResponseEntity<List<TipoProductoDTO>> obtenerTodos() {
+        log.info("GET - Listar tipos de producto activos");
         List<TipoProductoDTO> tipos = tipoProductoService.obtenerActivos();
-        if (!tipos.isEmpty()) {
-            return new ResponseEntity<>(tipos, HttpStatus.OK);
-        }
-        return new ResponseEntity<>("No hay tipos de producto activos", HttpStatus.NO_CONTENT);
+        if (tipos.isEmpty()) return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(tipos);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> obtenerPorId(@PathVariable Integer id) {
-        try {
-            return new ResponseEntity<>(tipoProductoService.buscarPorId(id), HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>("Tipo de producto no encontrado", HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @PostMapping
-    public ResponseEntity<?> crear(@Valid @RequestBody TipoProducto tipoProducto) {
-        try {
-            return new ResponseEntity<>(tipoProductoService.crear(tipoProducto), HttpStatus.CREATED);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<TipoProductoDTO> obtenerPorId(@PathVariable Integer id) {
+        log.info("GET - Buscar tipo de producto ID: {}", id);
+        return ResponseEntity.ok(tipoProductoService.buscarPorId(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> actualizar(@PathVariable Integer id, @Valid @RequestBody TipoProducto tipoProducto) {
-        try {
-            return new ResponseEntity<>(tipoProductoService.actualizar(id, tipoProducto), HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<TipoProductoDTO> actualizar(@PathVariable Integer id, @Valid @RequestBody TipoProducto tipoProducto) {
+        log.info("PUT - Actualizar tipo de producto ID: {}", id);
+        return ResponseEntity.ok(tipoProductoService.actualizar(id, tipoProducto));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> eliminar(@PathVariable Integer id) {
-        try {
-            tipoProductoService.eliminar(id);
-            return new ResponseEntity<>("Tipo de producto eliminado correctamente", HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<String> eliminar(@PathVariable Integer id) {
+        log.warn("DELETE - Eliminar tipo de producto ID: {}", id);
+        tipoProductoService.eliminar(id);
+        return ResponseEntity.ok("Tipo de producto con ID " + id + " desactivado con éxito.");
     }
 }

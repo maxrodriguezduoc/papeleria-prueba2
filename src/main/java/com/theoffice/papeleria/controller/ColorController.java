@@ -25,50 +25,38 @@ public class ColorController {
     @Autowired
     private ColorService colorService;
 
+    @PostMapping
+    public ResponseEntity<ColorDTO> crear(@Valid @RequestBody Color color) {
+        log.info("POST - Crear color: {}", color.getNombre_color());
+        ColorDTO nuevo = colorService.crear(color);
+        return new ResponseEntity<>(nuevo, HttpStatus.CREATED);
+    }
+
     @GetMapping
-    public ResponseEntity<?> obtenerTodos() {
+    public ResponseEntity<List<ColorDTO>> obtenerTodos() {
+        log.info("GET - Listar colores activos");
         List<ColorDTO> colores = colorService.obtenerTodos();
-        if (!colores.isEmpty()) {
-            return new ResponseEntity<>(colores, HttpStatus.OK);
-        }
-        return new ResponseEntity<>("No hay colores activos", HttpStatus.NO_CONTENT);
+        if (colores.isEmpty()) return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(colores);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> obtenerPorId(@PathVariable Integer id) {
-        try {
-            return new ResponseEntity<>(colorService.buscarColorPorId(id), HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>("Color no encontrado", HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @PostMapping
-    public ResponseEntity<?> crear(@Valid @RequestBody Color color) {
-        try {
-            return new ResponseEntity<>(colorService.crear(color), HttpStatus.CREATED);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<ColorDTO> obtenerPorId(@PathVariable Integer id) {
+        log.info("GET - Buscar color ID: {}", id);
+        return ResponseEntity.ok(colorService.buscarColorPorId(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> actualizar(@PathVariable Integer id, @Valid @RequestBody Color color) {
-        try {
-            return new ResponseEntity<>(colorService.actualizarColor(id, color), HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<ColorDTO> actualizar(@PathVariable Integer id, @Valid @RequestBody Color color) {
+        log.info("PUT - Actualizar color ID: {}", id);
+        return ResponseEntity.ok(colorService.actualizarColor(id, color));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> eliminar(@PathVariable Integer id) {
-        try {
-            colorService.eliminarColor(id);
-            return new ResponseEntity<>("Color eliminado correctamente", HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<String> eliminar(@PathVariable Integer id) {
+        log.warn("DELETE - Eliminar color ID: {}", id);
+        colorService.eliminarColor(id);
+        return ResponseEntity.ok("Color con ID " + id + " desactivado con éxito.");
     }
 
 

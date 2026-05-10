@@ -25,53 +25,49 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api/v1/marcas")
 @Slf4j
 public class MarcaController {
-     @Autowired
+    @Autowired
     private MarcaService marcaService;
 
-    @GetMapping
-    public ResponseEntity<?> obtenerTodos() {
-        List<MarcaDTO> marcas = marcaService.obtenerTodos();
-        if (!marcas.isEmpty()) {
-            return new ResponseEntity<>(marcas, HttpStatus.OK);
-        }
-        return new ResponseEntity<>("No hay marcas activas", HttpStatus.NO_CONTENT);
+    // 1. CREAR MARCA
+    @PostMapping
+    public ResponseEntity<MarcaDTO> crear(@Valid @RequestBody Marca marca) {
+        log.info("API REST - POST crear marca: {}", marca.getNombre_marca());
+        MarcaDTO nuevaMarca = marcaService.crearMarca(marca);
+        return new ResponseEntity<>(nuevaMarca, HttpStatus.CREATED);
     }
+
+    // 2. OBTENER TODAS LAS MARCAS ACTIVAS
+    @GetMapping
+    public ResponseEntity<List<MarcaDTO>> obtenerTodas() {
+        log.info("API REST - GET listar marcas activas");
+        List<MarcaDTO> marcas = marcaService.obtenerTodos();
+        if (marcas.isEmpty()) {
+            log.info("No se encontraron marcas activas");
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(marcas);
+    }
+
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> obtenerPorId(@PathVariable Integer id) {
-        try {
-            return new ResponseEntity<>(marcaService.buscarPorId(id), HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>("Marca no encontrada", HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<MarcaDTO> obtenerPorId(@PathVariable Integer id) {
+        log.info("API REST - GET buscar marca ID: {}", id);
+        return ResponseEntity.ok(marcaService.buscarPorId(id));
     }
 
-    @PostMapping
-    public ResponseEntity<?> crear(@Valid @RequestBody Marca marca) {
-        try {
-            return new ResponseEntity<>(marcaService.crearMarca(marca), HttpStatus.CREATED);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> actualizar(@PathVariable Integer id, @Valid @RequestBody Marca marca) {
-        try {
-            return new ResponseEntity<>(marcaService.actualizarMarca(id, marca), HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<MarcaDTO> actualizar(@PathVariable Integer id,@Valid @RequestBody Marca marca) {
+        log.info("API REST - PUT actualizar marca ID: {}", id);
+        return ResponseEntity.ok(marcaService.actualizarMarca(id, marca));
     }
 
+    
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> eliminar(@PathVariable Integer id) {
-        try {
-            marcaService.eliminarMarca(id);
-            return new ResponseEntity<>("Marca eliminada correctamente", HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<String> eliminar(@PathVariable Integer id) {
+        log.warn("API REST - DELETE eliminar marca ID: {}", id);
+        marcaService.eliminarMarca(id);
+        return ResponseEntity.ok("La marca con ID " + id + " ha sido desactivada con éxito.");
     }
 
 }
