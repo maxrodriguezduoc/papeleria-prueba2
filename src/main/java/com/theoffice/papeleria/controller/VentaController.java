@@ -28,50 +28,38 @@ public class VentaController {
     @Autowired
     private VentaService ventaService;
 
+    @PostMapping("/producto/{idProducto}")
+    public ResponseEntity<VentaDTO> crear(@PathVariable Integer idProducto,@Valid @RequestBody Venta venta) {
+        log.info("API REST - POST crear venta para producto ID: {}", idProducto);
+        VentaDTO nuevaVenta = ventaService.crear(venta, idProducto);
+        return new ResponseEntity<>(nuevaVenta, HttpStatus.CREATED);
+    }
+    
     @GetMapping
-    public ResponseEntity<?> obtenerTodas() {
+    public ResponseEntity<List<VentaDTO>> obtenerTodas() {
+        log.info("GET - Listar ventas activas");
         List<VentaDTO> ventas = ventaService.obtenerTodos();
-        if (!ventas.isEmpty()) {
-            return new ResponseEntity<>(ventas, HttpStatus.OK);
-        }
-        return new ResponseEntity<>("No hay ventas registradas", HttpStatus.NO_CONTENT);
+        if (ventas.isEmpty()) return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(ventas);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> obtenerPorId(@PathVariable Integer id) {
-        try {
-            return new ResponseEntity<>(ventaService.buscarPorId(id), HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>("Venta no encontrada", HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @PostMapping("/producto/{idProducto}")
-    public ResponseEntity<?> crear(@PathVariable Integer idProducto, @Valid @RequestBody Venta venta) {
-        try {
-            return new ResponseEntity<>(ventaService.crear(venta, idProducto), HttpStatus.CREATED);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<VentaDTO> obtenerPorId(@PathVariable Integer id) {
+        log.info("GET - Buscar venta ID: {}", id);
+        return ResponseEntity.ok(ventaService.buscarPorId(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> actualizar(@PathVariable Integer id, @Valid @RequestBody Venta venta) {
-        try {
-            return new ResponseEntity<>(ventaService.actualizarVentas(id, venta), HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<VentaDTO> actualizar(@PathVariable Integer id, @Valid @RequestBody Venta venta) {
+        log.info("PUT - Actualizar venta ID: {}", id);
+        return ResponseEntity.ok(ventaService.actualizarVentas(id, venta));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> eliminar(@PathVariable Integer id) {
-        try {
-            ventaService.eliminar(id);
-            return new ResponseEntity<>("Venta eliminada correctamente", HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<String> eliminar(@PathVariable Integer id) {
+        log.warn("DELETE - Eliminar venta ID: {}", id);
+        ventaService.eliminar(id);
+        return ResponseEntity.ok("Venta con ID " + id + " desactivada con éxito.");
     }
 
     
