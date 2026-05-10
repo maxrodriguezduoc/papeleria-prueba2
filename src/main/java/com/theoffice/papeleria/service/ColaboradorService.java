@@ -117,12 +117,10 @@ public class ColaboradorService {
         return convertirADTO(actualizado);
     }
 
-    // Metodo para convertir Entidades en DTO
     private ColaboradorDTO convertirADTO(Colaborador colaborador){
         ColaboradorDTO dto = new ColaboradorDTO();
         dto.setIdColaborador(colaborador.getIdColaborador());
         dto.setNombreColaborador(colaborador.getNombreColaborador());
         return dto;
     }
-
 }
