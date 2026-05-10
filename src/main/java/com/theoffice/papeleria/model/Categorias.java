@@ -14,7 +14,7 @@ public class Categorias {
 
     @ManyToOne
     @JoinColumn(name = "id_producto", nullable = false)
-    private Productos producto; // Muchos puentes apuntan a un Producto
+    private Producto producto; // Muchos puentes apuntan a un Producto
 
     @ManyToOne
     @JoinColumn(name = "id_categoria", nullable = false)

@@ -3,9 +3,9 @@ package com.theoffice.papeleria.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.theoffice.papeleria.model.TiposProductos;
+import com.theoffice.papeleria.model.TipoProducto;
 
 @Repository
-public interface TipoProductoRepository extends JpaRepository <TiposProductos, Integer>  {
+public interface TipoProductoRepository extends JpaRepository <TipoProducto, Integer>  {
 
 }

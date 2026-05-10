@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "marcas")
 
-public class Marcas {
+public class Marca {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id_marcas;
@@ -26,5 +26,8 @@ public class Marcas {
     @Size(min = 2, max = 100, message = "El nombre  de la marca debe tener entre 2 y 100 caracteres")
     @Column(nullable = false, length = 100)
     private String nombre_marca;
+
+    @Column(name = "activo", nullable = false)
+    private boolean activo = true;
 
 }

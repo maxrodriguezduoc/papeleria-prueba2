@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.theoffice.papeleria.model.Color;
 
 @Repository
-public interface ColoresRepository extends JpaRepository <Color, Integer>{
+public interface ColorRepository extends JpaRepository <Color, Integer>{
 
 }
