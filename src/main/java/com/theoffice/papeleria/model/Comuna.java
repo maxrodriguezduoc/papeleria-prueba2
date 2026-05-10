@@ -37,6 +37,9 @@ public class Comuna {
     @Column(nullable = false, length = 100)
     private String codigoPostal;
 
+    @Column(nullable = false)
+    private boolean activo;
+
     @ManyToOne
     @JoinColumn(name = "region_id", nullable = false)
     private Region region;

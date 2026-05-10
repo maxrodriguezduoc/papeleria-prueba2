@@ -30,6 +30,9 @@ public class Colaborador {
     @Column(nullable = false, length = 30)
     private String nombreColaborador;
 
+    @Column(nullable = false)
+    private boolean activo;
+
     @ManyToOne
     @JoinColumn(name = "cargo_id", nullable = false)
     private Cargo cargo;

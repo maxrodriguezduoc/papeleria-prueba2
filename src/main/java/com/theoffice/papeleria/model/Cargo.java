@@ -31,6 +31,9 @@ public class Cargo {
     @Column(nullable = false, length = 50)
     private String nombreCargo;
 
+    @Column(nullable = false)
+    private boolean activo;
+
     @OneToMany(mappedBy = "cargo")
     private List<Colaborador> colaboradores;
 }

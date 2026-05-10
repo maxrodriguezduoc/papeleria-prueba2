@@ -30,6 +30,9 @@ public class Region {
     @Column(nullable = false, length = 50, unique = true)
     private String nombreRegion;
 
+    @Column(nullable = false)
+    private boolean activo;
+
     @OneToMany(mappedBy = "region")
     private List<Comuna> comunas;
 }
