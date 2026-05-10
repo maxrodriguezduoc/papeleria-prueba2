@@ -26,8 +26,6 @@ public class Pago {
     @JoinColumn(name = "id_tipo_pago", nullable = false)
     private TipoPago tipoPago; // Efectivo, Tarjeta, Transferencia
 
-    // --- CONEXIONES EXCLUSIVAS (PERMITEN NULO) ---
-
     @ManyToOne
     @JoinColumn(name = "id_tarjeta", nullable = true)
     private Tarjeta tarjeta; // Solo se llena si se pagó con Tarjeta
