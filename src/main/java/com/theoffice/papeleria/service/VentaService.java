@@ -109,7 +109,6 @@ public class VentaService {
         if(ventas.getTotal_venta() != null){
             venta.setTotal_venta(ventas.getTotal_venta());
         }
-        ventaRepository.save(ventas);
         return convertirADTO(venta);
     }
 

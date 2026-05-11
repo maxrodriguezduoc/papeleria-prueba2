@@ -48,7 +48,7 @@ public class TipoProductoService {
         
         tipo.setNombre(tipoDetalles.getNombre());
         
-        return convertirADTO(tipoProductosRepository.save(tipo));
+        return convertirADTO(tipo);
     }
 
 

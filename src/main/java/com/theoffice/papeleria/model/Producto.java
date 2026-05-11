@@ -20,14 +20,14 @@ import jakarta.persistence.OneToMany;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "productos")
+@Table(name = "producto")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Producto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id_productos;
+    private Integer id_producto;
 
     @NotBlank (message = "El nombre del producto es obligatorio")
     @Size(min = 3, max = 100, message = "El nombre debe tener entre 3 y 100 caracteres")

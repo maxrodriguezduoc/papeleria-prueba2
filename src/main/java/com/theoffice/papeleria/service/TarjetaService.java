@@ -96,7 +96,6 @@ public class TarjetaService {
         existente.setNombreBanco(tarjeta.getNombreBanco().trim());
         existente.setNombreTitular(tarjeta.getNombreTitular());
         existente.setCvv(tarjeta.getCvv());
-        tarjetaRepository.save(existente);
         log.info("Tarjeta ID {} modificada con éxito", id);
 
         return convertirADTO(existente);

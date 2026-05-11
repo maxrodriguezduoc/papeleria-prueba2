@@ -70,7 +70,6 @@ public class CategoriaService {
         }
 
         existente.setNombre(categoria.getNombre().trim());
-        categoriaRepository.save(existente);
         log.info("Categoría ID {} modificada con éxito", id);
 
         return convertirADTO(existente);

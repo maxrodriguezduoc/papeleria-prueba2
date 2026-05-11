@@ -19,7 +19,7 @@ public class ProductoService {
         log.info("Iniciando registro de nuevo producto: {}", producto.getNombre_producto());
         producto.setActivo(true);
         Producto guardado = productosRepository.save(producto);
-        log.info("Producto registrado exitosamente. ID; {}, Stock inicial: {}" ,guardado.getId_productos(), guardado.getStock()); 
+        log.info("Producto registrado exitosamente. ID; {}, Stock inicial: {}" ,guardado.getId_producto(), guardado.getStock()); 
         return convertirADTO(guardado);
     }
 
@@ -56,7 +56,7 @@ public class ProductoService {
         log.info("Producto ID: {} ('{}') ha sido desactivado con éxito", id, producto.getNombre_producto());
     }
 
-    public Producto actualizarProducto(Integer id, Producto datosNuevos) {
+    public ProductoDTO actualizarProducto(Integer id, Producto datosNuevos) {
         
         log.info("Actualizando información del producto ID: {}", id);
         
@@ -70,16 +70,19 @@ public class ProductoService {
         if (producto.getStock() < 5) {
             log.warn("¡ALERTA! El producto '{}' (ID: {}) tiene stock bajo: {}", id ,producto.getNombre_producto(), id ,producto.getStock());
         }
-        return productosRepository.save(producto);
+        return convertirADTO(producto);
     }
     
-    private ProductoDTO convertirADTO(Producto productos){
-        ProductoDTO productosDTO = new ProductoDTO();
-        productosDTO.setId_productos(productos.getId_productos());
-        productosDTO.setNombre_producto(productos.getNombre_producto());
-        productosDTO.setPrecio_producto(productos.getPrecio_producto());
-        return productosDTO;
-    }
+    private ProductoDTO convertirADTO(Producto producto) {
+    ProductoDTO dto = new ProductoDTO();
+    dto.setId_producto(producto.getId_producto());
+    dto.setNombre_producto(producto.getNombre_producto());
+    dto.setPrecio_producto(producto.getPrecio_producto());
+    dto.setStock(producto.getStock()); 
+    dto.setActivo(producto.isActivo()); 
+    
+    return dto;
+}
 
 }   
 

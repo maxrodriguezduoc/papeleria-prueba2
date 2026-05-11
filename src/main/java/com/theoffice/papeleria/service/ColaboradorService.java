@@ -153,8 +153,6 @@ public class ColaboradorService {
             existente.getLocales().add(nuevoPuente);
         }
 
-        colaboradorRepository.save(existente);
-
         log.info("Colaborador actualizado exitosamente!");
 
         return convertirADTO(existente);
