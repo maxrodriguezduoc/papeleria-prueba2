@@ -14,12 +14,18 @@ Maximiliano Esteban Rodriguez Conejan
 
 ## TECNOLOGÍAS UTILIZADAS
 
-Java 21
+* Java 21
+
 Spring Boot
+
 Spring Data JPA + Hibernate
+
 Laragorn
+
 Maven
+
 Lombok
+
 GitHub
 
 ## ARQUITECTURA CSR
