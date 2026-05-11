@@ -71,37 +71,32 @@ public class ColaboradorService {
         log.info("El colaborador se ha desactivado exitosamente!");
     }
 
-    public ColaboradorDTO guardarColaborador(ColaboradorDTO dto) {
-        log.info("Creando colaborador: {}", dto.getNombreColaborador());
+    public ColaboradorDTO guardarColaborador(Colaborador colaborador) {
+        log.info("Creando colaborador: {}", colaborador.getNombreColaborador());
 
-        if (dto.getNombreColaborador() == null || dto.getNombreColaborador().trim().isEmpty()) {
+        if (colaborador.getNombreColaborador() == null || colaborador.getNombreColaborador().trim().isEmpty()) {
             log.error("Nombre del colaborador vacio!");
             throw new RuntimeException("Nombre de colaborador es obligatorio!");
         }
 
-        Cargo cargo = cargoRepository.findById(dto.getCargoId())
+        Cargo cargo = cargoRepository.findById(colaborador.getCargo().getIdCargo())
                 .orElseThrow(() -> new RuntimeException("Cargo no encontrado!"));
 
         if (!cargo.isActivo()) {
             throw new RuntimeException("Se debe asignar a un cargo activo!");
         }
 
-        Local local = localRepository.findById(dto.getLocalId())
+        Local local = localRepository.findById(colaborador.getLocales().get(0).getLocal().getIdLocal())
                 .orElseThrow(() -> new RuntimeException("Local no encontrado!"));
 
         if (!local.isActivo()) {
             throw new RuntimeException("Se debe asignar a un local activo!");
         }
 
-        Colaborador colaborador = new Colaborador();
-        colaborador.setNombreColaborador(dto.getNombreColaborador().trim());
-        colaborador.setCargo(cargo);
-        colaborador.setActivo(true);
-
         Colaboradores puente = new Colaboradores();
         puente.setColaborador(colaborador); // Enlace hacia el colaborador (Padre)
         puente.setLocal(local);             // Enlace hacia la sucursal física
-        puente.setActivo(true);             // La asignación de la sucursal inicia activa
+        puente.setActivo(true);
 
         // Añadimos el registro puente a la lista del colaborador principal
         colaborador.getLocales().add(puente);
@@ -113,7 +108,7 @@ public class ColaboradorService {
         return convertirADTO(guardado);
     }
 
-    public ColaboradorDTO actualizarColaborador(Integer id, ColaboradorDTO dto) {
+    public ColaboradorDTO actualizarColaborador(Integer id, Colaborador colaborador) {
         log.info("Actualizando colaborador con ID: {}", id);
 
         Colaborador existente = colaboradorRepository.findById(id)
@@ -123,14 +118,14 @@ public class ColaboradorService {
             throw new RuntimeException("Solo se puede actualizar colaboradores activo!");
         }
 
-        if (dto.getNombreColaborador() == null || dto.getNombreColaborador().trim().isEmpty()) {
+        if (colaborador.getNombreColaborador() == null || colaborador.getNombreColaborador().trim().isEmpty()) {
             throw new RuntimeException("Nombre de colaborador obligatorio!");
         }
 
-        existente.setNombreColaborador(dto.getNombreColaborador().trim());
+        existente.setNombreColaborador(colaborador.getNombreColaborador().trim());
 
-        if (dto.getCargoId() != null) {
-            Cargo cargo = cargoRepository.findById(dto.getCargoId())
+        if (colaborador.getCargo() != null) {
+            Cargo cargo = cargoRepository.findById(colaborador.getCargo().getIdCargo())
                     .orElseThrow(() -> new RuntimeException("Cargo no encontrado!"));
 
             if (!cargo.isActivo()) {
@@ -140,8 +135,8 @@ public class ColaboradorService {
             existente.setCargo(cargo);
         }
 
-        if (dto.getLocalId() != null) {
-            Local local = localRepository.findById(dto.getLocalId())
+        if (colaborador.getLocales()!= null) {
+            Local local = localRepository.findById(colaborador.getLocales().get(0).getLocal().getIdLocal())
                     .orElseThrow(() -> new RuntimeException("Local no encontrado!"));
 
             if (!local.isActivo()) {

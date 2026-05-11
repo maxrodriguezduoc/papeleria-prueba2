@@ -63,25 +63,19 @@ public class ComunaService {
         log.info("Comuna eliminada exitosamente!");
     }
 
-    public ComunaDTO guardarComuna(ComunaDTO dto) {
-        log.info("Creando comuna: {}", dto.getNombreComuna());
+    public ComunaDTO guardarComuna(Comuna comuna) {
+        log.info("Creando comuna: {}", comuna.getNombreComuna());
 
-        if (dto.getNombreComuna() == null || dto.getNombreComuna().trim().isEmpty()) {
+        if (comuna.getNombreComuna() == null || comuna.getNombreComuna().trim().isEmpty()) {
             throw new RuntimeException("Nombre de comuna obligatorio!");
         }
 
-        Region region = regionRepository.findById(dto.getRegionId())
+        Region region = regionRepository.findById(comuna.getRegion().getIdRegion())
                 .orElseThrow(() -> new RuntimeException("Region no encontrada!"));
 
         if (!region.isActivo()) {
             throw new RuntimeException("Se debe seleccionar una region activa");
         }
-
-        Comuna comuna = new Comuna();
-        comuna.setNombreComuna(dto.getNombreComuna().trim());
-        comuna.setCodigoPostal(dto.getCodigoPostal());
-        comuna.setRegion(region);
-        comuna.setActivo(true);
 
         Comuna guardada = comunaRepository.save(comuna);
 
@@ -90,7 +84,7 @@ public class ComunaService {
         return convertirADTO(guardada);
     }
 
-    public ComunaDTO actualizarComuna(Integer id, ComunaDTO dto) {
+    public ComunaDTO actualizarComuna(Integer id, Comuna comuna) {
         log.info("Actualizando comuna con ID: {}", id);
 
         Comuna existente = comunaRepository.findById(id)
@@ -100,15 +94,15 @@ public class ComunaService {
             throw new RuntimeException("Se debe seleccionar una comun activa!");
         }
 
-        if (dto.getNombreComuna() == null || dto.getNombreComuna().trim().isEmpty()) {
+        if (comuna.getNombreComuna() == null || comuna.getNombreComuna().trim().isEmpty()) {
             throw new RuntimeException("Nombre de comuna obligatorio!");
         }
 
-        existente.setNombreComuna(dto.getNombreComuna().trim());
-        existente.setCodigoPostal(dto.getCodigoPostal());
+        existente.setNombreComuna(comuna.getNombreComuna().trim());
+        existente.setCodigoPostal(comuna.getCodigoPostal());
 
-        if (dto.getRegionId() != null) {
-            Region region = regionRepository.findById(dto.getRegionId())
+        if (comuna.getRegion() != null) {
+            Region region = regionRepository.findById(comuna.getRegion().getIdRegion())
                     .orElseThrow(() -> new RuntimeException("Region no encontrada!"));
 
             if (!region.isActivo()) {

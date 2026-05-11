@@ -1,65 +1,68 @@
 package com.theoffice.papeleria.controller;
 
-import java.util.List;
+import com.theoffice.papeleria.dto.ProductoDTO;
+import com.theoffice.papeleria.model.Producto;
+import com.theoffice.papeleria.service.ProductoService;
+import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import com.theoffice.papeleria.dto.MarcaDTO;
-import com.theoffice.papeleria.model.Marca;
-import com.theoffice.papeleria.service.MarcaService;
-import jakarta.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/productos")
 @Slf4j
-
 public class ProductoController {
 
     @Autowired
-    private MarcaService marcaService;
+    private ProductoService productoService;
 
     @PostMapping
-    public ResponseEntity<MarcaDTO> crear(@Valid @RequestBody Marca marca) {
-        log.info("POST - Crear marca: {}", marca.getNombre_marca());
-        MarcaDTO nueva = marcaService.crearMarca(marca);
-        return new ResponseEntity<>(nueva, HttpStatus.CREATED);
+    public ResponseEntity<ProductoDTO> crear(@Valid @RequestBody Producto producto) {
+        log.info("API REST - Petición POST para crear un producto con nombre: {}", producto.getNombre_producto());
+        
+        ProductoDTO nuevoProducto = productoService.crearProducto(producto);
+        return new ResponseEntity<>(nuevoProducto, HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<List<MarcaDTO>> obtenerTodas() {
-        log.info("GET - Listar marcas activas");
-        List<MarcaDTO> marcas = marcaService.obtenerTodos();
-        if (marcas.isEmpty()) return ResponseEntity.noContent().build();
-        return ResponseEntity.ok(marcas);
+    public ResponseEntity<List<ProductoDTO>> obtenerTodos() {
+        log.info("API REST - Petición GET para listar todos los productos activos");
+        
+        List<ProductoDTO> productos = productoService.obtenerTodos();
+        
+        if (productos.isEmpty()) {
+            log.info("La consulta de productos no retornó resultados");
+            return ResponseEntity.noContent().build();
+        }
+        
+        return ResponseEntity.ok(productos);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<MarcaDTO> obtenerPorId(@PathVariable Integer id) {
-        log.info("GET - Buscar marca ID: {}", id);
-        return ResponseEntity.ok(marcaService.buscarPorId(id));
+    public ResponseEntity<ProductoDTO> obtenerPorId(@PathVariable Integer id) {
+        log.info("API REST - Petición GET para buscar producto con ID: {}", id);
+        
+        ProductoDTO producto = productoService.buscarPorId(id);
+        return ResponseEntity.ok(producto);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<MarcaDTO> actualizar(@PathVariable Integer id, @Valid @RequestBody Marca marca) {
-        log.info("PUT - Actualizar marca ID: {}", id);
-        return ResponseEntity.ok(marcaService.actualizarMarca(id, marca));
+    public ResponseEntity<ProductoDTO> actualizar(@PathVariable Integer id, @Valid @RequestBody Producto producto) {
+        log.info("API REST - Petición PUT para actualizar el producto con ID: {}", id);
+        
+        ProductoDTO actualizado = productoService.actualizarProducto(id, producto);
+        return ResponseEntity.ok(actualizado);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> eliminar(@PathVariable Integer id) {
-        log.warn("DELETE - Eliminar marca ID: {}", id);
-        marcaService.eliminarMarca(id);
-        return ResponseEntity.ok("Marca con ID " + id + " desactivada con éxito.");
+        log.warn("API REST - Petición DELETE para baja lógica del producto con ID: {}", id);
+        
+        productoService.eliminar(id);
+        return ResponseEntity.ok("El producto con ID " + id + " ha sido desactivado con éxito de la papelería.");
     }
-
-
 }

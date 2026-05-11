@@ -59,24 +59,20 @@ public class CargoService {
         log.info("El cargo se ha desactivado exitosamente!");
     }
 
-    public CargoDTO guardarCargo(CargoDTO dto) {
-        log.info("Guardando nuevo cargo: {}", dto.getNombreCargo());
+    public CargoDTO guardarCargo(Cargo cargo) {
+        log.info("Guardando nuevo cargo: {}", cargo.getNombreCargo());
 
-        if (dto.getNombreCargo() == null || dto.getNombreCargo().trim().isEmpty()) {
+        if (cargo.getNombreCargo() == null || cargo.getNombreCargo().trim().isEmpty()) {
             log.error("Nombre de Cargo no puede estar vacio!");
             throw new RuntimeException("Nombre de Cargo obligatorio!");
         }
-
-        Cargo cargo = new Cargo();
-        cargo.setNombreCargo(dto.getNombreCargo());
-        cargo.setActivo(true);
 
         Cargo guardado = cargoRepository.save(cargo);
 
         return convertirADTO(guardado);
     }
 
-    public CargoDTO actualizarCargo(Integer id, CargoDTO dto) {
+    public CargoDTO actualizarCargo(Integer id, Cargo cargo) {
         log.info("Actualizando cargo!");
 
         Cargo cargoExistente = cargoRepository.findById(id)
@@ -86,11 +82,11 @@ public class CargoService {
             throw new RuntimeException("Error al actualizar! Cargo inactivo!");
         }
 
-        if (dto.getNombreCargo() == null || dto.getNombreCargo().trim().isEmpty()) {
+        if (cargo.getNombreCargo() == null || cargo.getNombreCargo().trim().isEmpty()) {
             throw new RuntimeException("Nombre de cargo es obligatorio!");
         }
 
-        cargoExistente.setNombreCargo(dto.getNombreCargo().trim());
+        cargoExistente.setNombreCargo(cargo.getNombreCargo().trim());
         cargoRepository.save(cargoExistente);
 
         log.info("Cargo actualizado con exito!");
