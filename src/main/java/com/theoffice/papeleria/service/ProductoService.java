@@ -56,7 +56,7 @@ public class ProductoService {
         log.info("Producto ID: {} ('{}') ha sido desactivado con éxito", id, producto.getNombre_producto());
     }
 
-    public Producto actualizarProducto(Integer id, Producto datosNuevos) {
+    public ProductoDTO actualizarProducto(Integer id, Producto datosNuevos) {
         
         log.info("Actualizando información del producto ID: {}", id);
         
@@ -70,7 +70,7 @@ public class ProductoService {
         if (producto.getStock() < 5) {
             log.warn("¡ALERTA! El producto '{}' (ID: {}) tiene stock bajo: {}", id ,producto.getNombre_producto(), id ,producto.getStock());
         }
-        return productosRepository.save(producto);
+        return convertirADTO(productosRepository.save(datosNuevos));
     }
     
     private ProductoDTO convertirADTO(Producto productos){
