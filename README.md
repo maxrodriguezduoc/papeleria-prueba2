@@ -7,7 +7,9 @@ Un sistema para gestionar la papelería The Office mediantes entidades relaciona
 ## INTEGRANTES
 
 Ignacio Andrés Acevedo Espinoza
+
 Yaritxa Gonzales Soto
+
 Maximiliano Esteban Rodriguez Conejan
 
 ## TECNOLOGÍAS UTILIZADAS
