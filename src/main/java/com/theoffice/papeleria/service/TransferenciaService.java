@@ -95,7 +95,6 @@ public class TransferenciaService {
         existente.setNumeroCuentaDestino(transferencia.getNumeroCuentaDestino());
         existente.setMonto(transferencia.getMonto());
 
-        transferenciaRepository.save(existente);
         log.info("Registro de transferencia ID {} actualizado con éxito", id);
 
         return convertirADTO(existente);

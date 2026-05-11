@@ -87,7 +87,6 @@ public class CargoService {
         }
 
         cargoExistente.setNombreCargo(cargo.getNombreCargo().trim());
-        cargoRepository.save(cargoExistente);
 
         log.info("Cargo actualizado con exito!");
 

@@ -73,7 +73,6 @@ public class TipoPagoService {
         }
 
         existente.setFormaPago(tipoPago.getFormaPago().trim());
-        tipoPagoRepository.save(existente);
         log.info("Tipo de pago ID {} modificado con éxito", id);
 
         return convertirADTO(existente);

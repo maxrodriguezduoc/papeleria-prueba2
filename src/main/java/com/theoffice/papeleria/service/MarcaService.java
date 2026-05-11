@@ -30,7 +30,7 @@ public class MarcaService {
         marcas.setActivo(true);
         marcaRepository.save(marcas);
 
-        log.info("Marca registrada con exito. Id aignado para la marca es: {}", marcas.getId_marcas());
+        log.info("Marca registrada con exito. Id asignado para la marca es: {}", marcas.getId_marcas());
         return convertirADTO(marcas);
     }
 
@@ -66,7 +66,6 @@ public class MarcaService {
         if(marcas.getNombre_marca()!= null){
             marca.setNombre_marca(marca.getNombre_marca().trim());
         }
-        marcaRepository.save(marca);
         return convertirADTO(marca);
 
     }

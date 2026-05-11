@@ -79,7 +79,6 @@ public class ColorService {
         if (colores.getNombre_color() != null && !colores.getNombre_color().trim().isEmpty()) {
             color.setNombre_color(colores.getNombre_color().trim());
         }
-        coloresRepository.save(color);
         log.info("Color con ID: {} actualizado con éxito en la base de datos", id);
         return convertirADTO(color);
     }

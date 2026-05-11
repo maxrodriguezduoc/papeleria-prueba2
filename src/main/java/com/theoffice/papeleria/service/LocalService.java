@@ -91,9 +91,8 @@ public class LocalService {
         if (local.getComuna() != null) {
             existente.setComuna(local.getComuna());
         }
-        Local actualizado = localRepository.save(existente);
         log.info("Local actualizado exitosamente!");
-        return convertirADTO(actualizado);
+        return convertirADTO(existente);
     }
 
     private LocalDTO convertirADTO(Local local) {

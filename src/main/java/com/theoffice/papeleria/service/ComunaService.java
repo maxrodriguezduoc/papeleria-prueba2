@@ -112,8 +112,6 @@ public class ComunaService {
             existente.setRegion(region);
         }
 
-        comunaRepository.save(existente);
-
         log.info("Comuna actualizada exitosamente!");
 
         return convertirADTO(existente);

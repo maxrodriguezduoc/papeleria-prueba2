@@ -77,7 +77,6 @@ public class ClienteService {
 
         existente.setNombreCompleto(cliente.getNombreCompleto());
 
-        clienteRepository.save(existente);
         log.info("Cliente ID {} modificado con éxito", id);
 
         return convertirADTO(existente);

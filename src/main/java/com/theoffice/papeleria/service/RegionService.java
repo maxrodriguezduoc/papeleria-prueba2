@@ -84,11 +84,9 @@ public class RegionService {
             existente.setNombreRegion(region.getNombreRegion().trim());
         }
 
-        Region actualizada = regionRepository.save(existente);
-
         log.info("Región actualizada exitosamente!");
 
-        return convertirADTO(actualizada);
+        return convertirADTO(existente);
     }
 
     private RegionDTO convertirADTO(Region region) {
