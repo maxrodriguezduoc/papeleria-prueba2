@@ -69,11 +69,11 @@ spring.jpa.show-sql=true
 spring.jpa.properties.hibernate.format_sql=true
 
 
-Ejecutar proyecto
+## Ejecutar proyecto
 
 mvn spring-boot:run
 
 
-Ejecutar API en Postman en:
+## Ejecutar API en Postman en:
 
 http://localhost:8080
