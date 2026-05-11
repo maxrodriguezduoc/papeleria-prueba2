@@ -4,9 +4,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.theoffice.papeleria.dto.LocalDTO;
-import com.theoffice.papeleria.model.Comuna;
 import com.theoffice.papeleria.model.Local;
-import com.theoffice.papeleria.repository.ComunaRepository;
 import com.theoffice.papeleria.repository.LocalRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -18,9 +16,6 @@ public class LocalService {
 
     @Autowired
     private LocalRepository localRepository;
-
-    @Autowired
-    private ComunaRepository comunaRepository;
 
     public List<LocalDTO> obtenerTodos() {
         log.info("Obteniendo lista de locales");
@@ -58,28 +53,16 @@ public class LocalService {
         log.info("Local eliminado correctamente!");
     }
 
-    public LocalDTO guardarLocal(LocalDTO dto) {
-        log.info("Creando local: {}", dto.getNombreLocal());
+    public LocalDTO guardarLocal(Local local) {
+        log.info("Creando local: {}", local.getNombreLocal());
 
-        if (dto.getNombreLocal() == null || dto.getNombreLocal().trim().isEmpty()) {
+        if (local.getNombreLocal() == null || local.getNombreLocal().trim().isEmpty()) {
             throw new RuntimeException("Nombre de local obligatorio!");
         }
 
-        if (dto.getDireccion() == null || dto.getDireccion().trim().isEmpty()) {
+        if (local.getDireccion() == null || local.getDireccion().trim().isEmpty()) {
             throw new RuntimeException("Direccion de local obligatorio!");
         }
-
-        Comuna comuna = comunaRepository.findById(dto.getComunaId())
-                .orElseThrow(() -> {
-                    log.error("Comuna no encontrada!");
-                    return new RuntimeException("Comuna no encontrada!");
-                });
-
-        Local local = new Local();
-        local.setNombreLocal(dto.getNombreLocal().trim());
-        local.setDireccion(dto.getDireccion().trim());
-        local.setComuna(comuna);
-        local.setActivo(true);
 
         Local guardado = localRepository.save(local);
 
@@ -88,7 +71,7 @@ public class LocalService {
         return convertirADTO(guardado);
     }
 
-    public LocalDTO actualizarLocal(Integer id, LocalDTO dto) {
+    public LocalDTO actualizarLocal(Integer id, Local local) {
         log.info("Actualizando local con ID: {}", id);
 
         Local existente = localRepository.findById(id)
@@ -97,18 +80,16 @@ public class LocalService {
                     return new RuntimeException("Local no encontrado!");
                 });
 
-        if (dto.getNombreLocal() != null) {
-            existente.setNombreLocal(dto.getNombreLocal().trim());
+        if (local.getNombreLocal() != null) {
+            existente.setNombreLocal(local.getNombreLocal().trim());
         }
 
-        if (dto.getDireccion() != null) {
-            existente.setDireccion(dto.getDireccion().trim());
+        if (local.getDireccion() != null) {
+            existente.setDireccion(local.getDireccion().trim());
         }
 
-        if (dto.getComunaId() != null) {
-            Comuna comuna = comunaRepository.findById(dto.getComunaId())
-                    .orElseThrow(() -> new RuntimeException("Comuna no encontrada!"));
-            existente.setComuna(comuna);
+        if (local.getComuna() != null) {
+            existente.setComuna(local.getComuna());
         }
         Local actualizado = localRepository.save(existente);
         log.info("Local actualizado exitosamente!");

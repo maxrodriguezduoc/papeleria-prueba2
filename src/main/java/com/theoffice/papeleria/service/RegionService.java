@@ -53,25 +53,25 @@ public class RegionService {
         log.info("Region eliminada exitosamente!!");
     }
 
-    public RegionDTO guardarRegion(RegionDTO dto) {
-        log.info("Creando región: {}", dto.getNombreRegion());
+    public RegionDTO guardarRegion(Region region) {
+        log.info("Creando región: {}", region.getNombreRegion());
 
-        if (dto.getNombreRegion() == null || dto.getNombreRegion().trim().isEmpty()) {
+        if (region.getNombreRegion() == null || region.getNombreRegion().trim().isEmpty()) {
             throw new RuntimeException("Nombre de region obligatorio!");
         }
 
-        Region region = new Region();
-        region.setNombreRegion(dto.getNombreRegion().trim());
-        region.setActivo(true);
+        Region regi = new Region();
+        regi.setNombreRegion(region.getNombreRegion().trim());
+        regi.setActivo(true);
 
-        Region guardada = regionRepository.save(region);
+        Region guardada = regionRepository.save(regi);
 
         log.info("Region guardada exitosamente!");
 
         return convertirADTO(guardada);
     }
 
-    public RegionDTO actualizarRegion(Integer id, RegionDTO dto) {
+    public RegionDTO actualizarRegion(Integer id, Region region) {
         log.info("Actualizando región con ID: {}", id);
 
         Region existente = regionRepository.findById(id)
@@ -80,8 +80,8 @@ public class RegionService {
                     return new RuntimeException("Región no encontrada!");
                 });
 
-        if (dto.getNombreRegion() != null) {
-            existente.setNombreRegion(dto.getNombreRegion().trim());
+        if (region.getNombreRegion() != null) {
+            existente.setNombreRegion(region.getNombreRegion().trim());
         }
 
         Region actualizada = regionRepository.save(existente);
