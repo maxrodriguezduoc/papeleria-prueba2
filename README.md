@@ -20,7 +20,7 @@ Maximiliano Esteban Rodriguez Conejan
 
 * Spring Data JPA + Hibernate
 
-* Laragorn
+* Laragon
 
 * Maven
 
